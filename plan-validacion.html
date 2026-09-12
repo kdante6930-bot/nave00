@@ -1,0 +1,878 @@
+<title>Plan de validación Nave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F1F2EE; --surface:#FBFBF9; --surface-2:#E9EBE5;
+  --ink:#0F1A18; --slate:#5B6864; --faint:#8A958F;
+  --rule:#D2D8D1; --rule-hard:#0F1A18;
+  --petrol:#14504B; --petrol-soft:#DDE9E6;
+  --signal:#B5830A; --signal-bg:#F7EBC8;
+  --brick:#A63D28; --brick-bg:#F6E3DD;
+  --moss:#3E7A4E;
+  --shadow:0 1px 2px rgba(15,26,24,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1413; --surface:#131E1C; --surface-2:#1B2826;
+    --ink:#E4EAE6; --slate:#9DACA6; --faint:#6E7D77;
+    --rule:#26332F; --rule-hard:#5E726C;
+    --petrol:#63BDB0; --petrol-soft:#16302D;
+    --signal:#E8B94A; --signal-bg:#2E2413;
+    --brick:#E08A70; --brick-bg:#31201B;
+    --moss:#77BB86;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1413; --surface:#131E1C; --surface-2:#1B2826;
+  --ink:#E4EAE6; --slate:#9DACA6; --faint:#6E7D77;
+  --rule:#26332F; --rule-hard:#5E726C;
+  --petrol:#63BDB0; --petrol-soft:#16302D;
+  --signal:#E8B94A; --signal-bg:#2E2413;
+  --brick:#E08A70; --brick-bg:#31201B;
+  --moss:#77BB86;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-variation-settings:"wdth" 100;
+  font-size:16px; line-height:1.6;
+  margin:0; padding:0;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding-inline:20px; padding-block:0}
+h1,h2,h3{font-variation-settings:"wdth" 112; text-wrap:balance; margin:0; line-height:1.12; letter-spacing:-.015em}
+h1{font-size:clamp(30px,5.2vw,52px); font-weight:700}
+h2{font-size:clamp(23px,3.2vw,33px); font-weight:700}
+h3{font-size:18px; font-weight:600; font-variation-settings:"wdth" 105; line-height:1.3}
+p{margin:0}
+a{color:var(--petrol)}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--faint);
+}
+.lede{font-size:clamp(16px,2vw,19px); color:var(--slate); max-width:64ch; line-height:1.55}
+.stack{display:flex; flex-direction:column}
+.g8{gap:8px}.g12{gap:12px}.g16{gap:16px}.g24{gap:24px}.g32{gap:32px}
+
+/* ---- title block: a drawing's title block ---- */
+.titleblock{border-bottom:2px solid var(--rule-hard); background:var(--surface)}
+.tb-grid{display:grid; grid-template-columns:1fr; gap:28px; padding-block:36px 28px}
+.tb-meta{display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--rule); border-radius:2px; overflow:hidden}
+.tb-cell{flex:1 1 128px; padding:10px 14px; border-right:1px solid var(--rule); background:var(--surface)}
+.tb-cell:last-child{border-right:none}
+.tb-cell dt{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin:0 0 3px}
+.tb-cell dd{margin:0; font-size:14px; font-weight:600; font-variation-settings:"wdth" 105}
+
+/* ---- dashboard ---- */
+.board{display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden}
+.stat{background:var(--surface); padding:16px 18px 18px; display:flex; flex-direction:column; gap:5px}
+.stat .k{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint)}
+.stat .v{font-family:"IBM Plex Mono",monospace; font-size:34px; font-weight:600; line-height:1; font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.stat .v small{font-size:16px; font-weight:400; color:var(--faint)}
+.stat .n{font-size:12.5px; color:var(--slate); line-height:1.4}
+.stat.hero{background:var(--petrol-soft)}
+.stat.hero .v{color:var(--petrol)}
+.bar{height:6px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin-top:3px}
+.bar i{display:block; height:100%; background:var(--petrol); border-radius:99px; transition:width .45s cubic-bezier(.3,.9,.3,1)}
+.bar.sig i{background:var(--signal)}
+
+/* ---- sections ---- */
+section{padding-block:clamp(40px,6vw,64px); border-top:1px solid var(--rule)}
+section:first-of-type{border-top:none}
+.shead{display:flex; flex-direction:column; gap:9px; margin-bottom:26px; max-width:68ch}
+
+/* ---- generic blocks ---- */
+.card{background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:20px}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px}
+.grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:16px}
+
+.callout{border-left:3px solid var(--signal); background:var(--signal-bg); padding:16px 18px; border-radius:0 3px 3px 0}
+.callout.risk{border-left-color:var(--brick); background:var(--brick-bg)}
+.callout.go{border-left-color:var(--moss); background:var(--petrol-soft)}
+.callout h3{margin-bottom:6px}
+.callout p + p{margin-top:9px}
+
+.tablewrap{overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:580px; font-size:14.5px}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule); vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--faint); font-weight:500; background:var(--surface-2); border-bottom:1px solid var(--rule-hard)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.total td{background:var(--surface-2); font-weight:600}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--surface-2); color:var(--slate); border:1px solid var(--rule); white-space:nowrap}
+.chip.sig{background:var(--signal-bg); color:var(--signal); border-color:transparent}
+.chip.pet{background:var(--petrol-soft); color:var(--petrol); border-color:transparent}
+.chip.brk{background:var(--brick-bg); color:var(--brick); border-color:transparent}
+
+/* ---- funnel ---- */
+.funnel{display:flex; flex-direction:column; gap:3px}
+.frow{display:grid; grid-template-columns:minmax(120px,1.1fr) 3fr minmax(74px,auto); align-items:center; gap:12px}
+.frow .fl{font-size:13.5px; font-weight:500}
+.frow .ft{height:30px; border-radius:2px; background:var(--petrol); opacity:.88; display:flex; align-items:center; padding-inline:9px; min-width:34px}
+.frow .fv{font-family:"IBM Plex Mono",monospace; font-size:13px; font-variant-numeric:tabular-nums; text-align:right; font-weight:500}
+.frow .fp{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:#F1F2EE; letter-spacing:.05em}
+
+/* ---- weeks ---- */
+.weeks{display:flex; flex-direction:column; gap:14px}
+.week{background:var(--surface); border:1px solid var(--rule); border-radius:3px; overflow:hidden}
+.week.now{border-color:var(--petrol); box-shadow:0 0 0 1px var(--petrol)}
+.wtop{display:grid; grid-template-columns:auto 1fr; gap:14px; padding:15px 18px; align-items:start; border-bottom:1px solid var(--rule); background:var(--surface-2)}
+.wnum{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; letter-spacing:.08em; background:var(--rule-hard); color:var(--paper); padding:4px 8px; border-radius:2px; white-space:nowrap; margin-top:2px}
+.week.now .wnum{background:var(--petrol); color:var(--surface)}
+.wtitle{display:flex; flex-direction:column; gap:4px}
+.wgoal{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--slate); font-variant-numeric:tabular-nums}
+.wbody{padding:15px 18px 18px; display:flex; flex-direction:column; gap:14px}
+ul.checks{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+ul.checks li{display:flex}
+ul.checks label{display:flex; gap:10px; align-items:flex-start; cursor:pointer; padding:5px 7px; margin-inline:-7px; border-radius:3px; font-size:14.5px; line-height:1.45; flex:1}
+ul.checks label:hover{background:var(--surface-2)}
+ul.checks input{appearance:none; width:16px; height:16px; border:1.5px solid var(--rule-hard); border-radius:2px; flex:none; margin-top:3px; cursor:pointer; background:var(--surface); position:relative; transition:background .12s,border-color .12s}
+ul.checks input:checked{background:var(--petrol); border-color:var(--petrol)}
+ul.checks input:checked::after{content:""; position:absolute; left:4.5px; top:1px; width:4px; height:8.5px; border:solid var(--surface); border-width:0 2px 2px 0; transform:rotate(42deg)}
+ul.checks input:focus-visible{outline:2px solid var(--signal); outline-offset:2px}
+ul.checks input:checked + span{color:var(--faint); text-decoration:line-through; text-decoration-color:var(--rule)}
+.wmetrics{display:flex; flex-wrap:wrap; gap:10px; padding-top:12px; border-top:1px dashed var(--rule); align-items:flex-end}
+.field{display:flex; flex-direction:column; gap:4px}
+.field label{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint)}
+.field input{width:82px; padding:6px 9px; border:1px solid var(--rule); border-radius:2px; background:var(--paper); color:var(--ink); font-family:"IBM Plex Mono",monospace; font-size:15px; font-variant-numeric:tabular-nums; font-weight:500}
+.field input:focus-visible{outline:2px solid var(--petrol); outline-offset:-1px; border-color:transparent}
+.wtally{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--slate); padding-bottom:7px; flex:1; min-width:130px}
+
+/* ---- scripts ---- */
+.script{background:var(--surface); border:1px solid var(--rule); border-radius:3px; overflow:hidden}
+.sctop{display:flex; gap:12px; justify-content:space-between; align-items:center; padding:12px 16px; background:var(--surface-2); border-bottom:1px solid var(--rule); flex-wrap:wrap}
+.sctop .l{display:flex; flex-direction:column; gap:2px}
+.sctop h3{font-size:15px}
+.sctop .w{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint)}
+.copy{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:7px 12px; border:1px solid var(--rule-hard); background:transparent; color:var(--ink); border-radius:2px; cursor:pointer; white-space:nowrap; transition:background .12s,color .12s}
+.copy:hover{background:var(--rule-hard); color:var(--paper)}
+.copy.ok{background:var(--moss); border-color:var(--moss); color:#FBFBF9}
+.copy:focus-visible{outline:2px solid var(--signal); outline-offset:2px}
+.script pre{margin:0; padding:16px; font-family:"IBM Plex Mono",monospace; font-size:13px; line-height:1.62; white-space:pre-wrap; word-break:break-word; color:var(--ink)}
+.script pre b{color:var(--petrol); font-weight:500}
+
+/* ---- rhythm ---- */
+.rhythm{display:grid; grid-template-columns:repeat(auto-fit,minmax(142px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden}
+.day{background:var(--surface); padding:13px 14px 15px; display:flex; flex-direction:column; gap:7px; min-height:128px}
+.day.rest{background:var(--surface-2)}
+.day .d{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--faint); display:flex; justify-content:space-between; gap:6px}
+.day .d b{color:var(--signal); font-weight:600}
+.day .t{font-size:13.5px; line-height:1.42}
+.day .t + .t{color:var(--slate); font-size:12.5px}
+
+/* ---- content pillars ---- */
+ol.hooks{margin:0; padding-left:0; list-style:none; counter-reset:h; display:flex; flex-direction:column; gap:1px}
+ol.hooks li{counter-increment:h; display:grid; grid-template-columns:auto 1fr; gap:13px; padding:11px 14px; background:var(--surface); border:1px solid var(--rule); border-top:none; align-items:baseline}
+ol.hooks li:first-child{border-top:1px solid var(--rule); border-radius:3px 3px 0 0}
+ol.hooks li:last-child{border-radius:0 0 3px 3px}
+ol.hooks li::before{content:counter(h,decimal-leading-zero); font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--faint); font-variant-numeric:tabular-nums}
+ol.hooks q{font-size:14.5px; quotes:"“" "”"}
+ol.hooks em{display:block; font-style:normal; font-size:12.5px; color:var(--slate); margin-top:2px}
+
+footer{border-top:2px solid var(--rule-hard); background:var(--surface); padding-block:28px 40px}
+.foot{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--slate)}
+.savenote{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint)}
+.savenote b{color:var(--moss); font-weight:600}
+
+@media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important}}
+@media (max-width:560px){
+  .frow{grid-template-columns:minmax(96px,1fr) 2fr auto; gap:8px}
+  .frow .fl{font-size:12.5px}
+  .stat .v{font-size:29px}
+}
+</style>
+
+<div class="titleblock">
+  <div class="wrap tb-grid">
+    <div class="stack g16">
+      <span class="eyebrow">Validación de producto · 8 semanas</span>
+      <h1>Nave: de 0 a 35 espacios publicados</h1>
+      <p class="lede">Marketing orgánico, presupuesto cero, un solo operador. Este es el plan completo: la matemática del embudo, los seis canales ordenados por apalancamiento, los guiones para copiar y pegar, y el ritmo diario que lo sostiene. Marcá lo que vas haciendo — el tablero guarda tu progreso.</p>
+    </div>
+    <dl class="tb-meta">
+      <div class="tb-cell"><dt>Meta</dt><dd>35 publicaciones</dd></div>
+      <div class="tb-cell"><dt>Rango aceptable</dt><dd>20 – 50</dd></div>
+      <div class="tb-cell"><dt>Plazo</dt><dd>8 semanas</dd></div>
+      <div class="tb-cell"><dt>Presupuesto</dt><dd>$0 hasta S5</dd></div>
+      <div class="tb-cell"><dt>Carga semanal</dt><dd>16 – 18 h</dd></div>
+    </dl>
+  </div>
+</div>
+
+<main class="wrap">
+
+<section id="tablero">
+  <div class="shead">
+    <span class="eyebrow">Tablero</span>
+    <h2>Dónde estás parado</h2>
+    <p class="lede">Cargá dos números por semana más abajo: cuántos contactos hiciste y cuántas publicaciones cerraste. Con eso el tablero calcula tu tasa real y te dice si el problema es volumen o es el guion.</p>
+  </div>
+  <div class="board" id="board">
+    <div class="stat hero">
+      <span class="k">Publicaciones confirmadas</span>
+      <span class="v" id="s-pub">0<small> / 35</small></span>
+      <div class="bar"><i id="s-pub-bar" style="width:0%"></i></div>
+      <span class="n" id="s-pub-n">Arrancá cargando la semana 1.</span>
+    </div>
+    <div class="stat">
+      <span class="k">Contactos hechos</span>
+      <span class="v" id="s-con">0<small> / 400</small></span>
+      <div class="bar sig"><i id="s-con-bar" style="width:0%"></i></div>
+      <span class="n">50 por semana · 10 por día hábil</span>
+    </div>
+    <div class="stat">
+      <span class="k">Tasa contacto → publicación</span>
+      <span class="v" id="s-rate">—</span>
+      <span class="n" id="s-rate-n">Necesitás 8,75 % para llegar a 35 con 400 contactos.</span>
+    </div>
+    <div class="stat">
+      <span class="k">Ritmo vs. plan</span>
+      <span class="v" id="s-pace">—</span>
+      <span class="n" id="s-pace-n">Se calcula con la última semana que cargues.</span>
+    </div>
+  </div>
+</section>
+
+<section id="regla">
+  <div class="shead">
+    <span class="eyebrow">La regla · antes que nada</span>
+    <h2>Qué cuenta como “publicación confirmada”</h2>
+    <p class="lede">Si no definís esto ahora, en la semana 6 vas a tener 40 “interesados” y cero validación. Un espacio cuenta solo cuando cumple las cinco.</p>
+  </div>
+  <div class="grid3">
+    <div class="card stack g8"><span class="chip pet">01</span><h3>Dueño identificado</h3><p style="font-size:14px;color:var(--slate)">Nombre, WhatsApp y DNI verificado con foto. Sin esto no hay contrato posible.</p></div>
+    <div class="card stack g8"><span class="chip pet">02</span><h3>Medidas reales</h3><p style="font-size:14px;color:var(--slate)">Alto × ancho × profundidad, tomadas por vos con cinta. Nunca “más o menos 2×2”.</p></div>
+    <div class="card stack g8"><span class="chip pet">03</span><h3>Cuatro fotos</h3><p style="font-size:14px;color:var(--slate)">Vacío, con luz, desde la puerta, y una con un objeto de escala adentro.</p></div>
+    <div class="card stack g8"><span class="chip pet">04</span><h3>Precio acordado</h3><p style="font-size:14px;color:var(--slate)">Un número por mes que el dueño ya aceptó. No un rango, no “vemos”.</p></div>
+    <div class="card stack g8"><span class="chip pet">05</span><h3>Compromiso escrito</h3><p style="font-size:14px;color:var(--slate)">El Acuerdo de Disponibilidad confirmado por WhatsApp. Este es el que más se saltea y el que más duele.</p></div>
+    <div class="card stack g8" style="background:var(--brick-bg);border-color:transparent"><span class="chip brk">Si falta una</span><h3>Es un interesado</h3><p style="font-size:14px;color:var(--slate)">Va al pipeline, no al contador. Mentirte en esta cuenta es la forma más rápida de llegar a la semana 8 sin saber nada.</p></div>
+  </div>
+</section>
+
+<section id="matematica">
+  <div class="shead">
+    <span class="eyebrow">La matemática</span>
+    <h2>Por qué 400 contactos y no 800</h2>
+    <p class="lede">Escribirle en frío a un dueño particular convierte alrededor del 4–5 %. A esa tasa, 35 publicaciones te exigen casi 800 contactos: 20 por día, todos los días, dos meses. Es insostenible y no hace falta. La salida no es escribir más, es elegir canales con apalancamiento: un encargado te da acceso a diez bauleras, un administrador a diez edificios.</p>
+  </div>
+  <div class="stack g24">
+    <div class="card">
+      <div class="funnel" id="funnel">
+        <div class="frow"><span class="fl">Contactos</span><div class="ft" style="width:100%"><span class="fp">100 %</span></div><span class="fv">400</span></div>
+        <div class="frow"><span class="fl">Te responden</span><div class="ft" style="width:45%"><span class="fp">45 %</span></div><span class="fv">180</span></div>
+        <div class="frow"><span class="fl">Conversación real</span><div class="ft" style="width:24%"><span class="fp">24 %</span></div><span class="fv">96</span></div>
+        <div class="frow"><span class="fl">Visita agendada</span><div class="ft" style="width:14%"><span class="fp">14 %</span></div><span class="fv">56</span></div>
+        <div class="frow"><span class="fl">Publicación confirmada</span><div class="ft" style="width:9%;background:var(--signal)"><span class="fp" style="color:#0F1A18">9 %</span></div><span class="fv">35</span></div>
+      </div>
+    </div>
+    <div class="callout">
+      <h3>El número que tenés que vigilar</h3>
+      <p>La tasa de respuesta al primer mensaje. Si está por debajo del 30 %, el problema no es el volumen: es a quién le escribís o cómo abrís el mensaje. Arreglá eso antes de mandar 100 mensajes más — vas a estar quemando tu única lista.</p>
+      <p><strong>Y el otro:</strong> el 80 % de los “sí” llegan entre el tercer y el quinto contacto, no en el primero. Si mandás 400 mensajes y hacés cero seguimiento, tu embudo real es la mitad del de arriba.</p>
+    </div>
+  </div>
+</section>
+
+<section id="canales">
+  <div class="shead">
+    <span class="eyebrow">Los canales</span>
+    <h2>Seis frentes, ordenados por apalancamiento</h2>
+    <p class="lede">No son seis canales para hacer todos a la vez. Están ordenados por cuándo abrirlos: el country te da confianza y las primeras fotos reales; los encargados te dan volumen; los administradores son lentos pero son el canal que después escala solo.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Canal</th><th>Por qué funciona</th><th class="num">Contactos</th><th class="num">Publ.</th><th class="num">Ventana</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tu country</strong><div style="font-size:12.5px;color:var(--slate)">Vecinos, garajes, altillos, quinchos</div></td><td>Red caliente. Te conocen la cara. Es donde sacás las primeras fotos y las primeras historias reales.</td><td class="num">60</td><td class="num">11</td><td class="num">S1–S3</td></tr>
+        <tr><td><strong>Encargados de edificio</strong><div style="font-size:12.5px;color:var(--slate)">Con comisión por espacio alquilado</div></td><td>Saben exactamente qué baulera está vacía y de quién es. Nadie les pregunta nunca. Es el canal más subvalorado que existe.</td><td class="num">120</td><td class="num">12</td><td class="num">S2–S6</td></tr>
+        <tr><td><strong>Administradores de consorcio</strong><div style="font-size:12.5px;color:var(--slate)">Registro Público, CABA y PBA</div></td><td>Un solo sí te abre entre 3 y 10 edificios. Lento de cerrar, enorme de techo. La lista es pública y gratis.</td><td class="num">60</td><td class="num">7</td><td class="num">S3–S8</td></tr>
+        <tr><td><strong>Self-storage con vacancia</strong><div style="font-size:12.5px;color:var(--slate)">Y guardamuebles de mudanceras</div></td><td>Tienen unidades vacías que ya les cuestan plata. Para ellos sos upside puro. Un sí = 5 a 15 unidades de una.</td><td class="num">25</td><td class="num">5</td><td class="num">S2–S5</td></tr>
+        <tr><td><strong>Grupos y Marketplace</strong><div style="font-size:12.5px;color:var(--slate)">Facebook vecinal, Marketplace, IG</div></td><td>Gratis y de altísima intención en Argentina. No trae volumen pero trae a los que ya lo estaban pensando.</td><td class="num">~40</td><td class="num">5</td><td class="num">continuo</td></tr>
+        <tr><td><strong>Referidos de hosts</strong><div style="font-size:12.5px;color:var(--slate)">Pedidos, no esperados</div></td><td>El que ya publicó y le fue bien es tu mejor vendedor. Pero solo si se lo pedís explícitamente, con nombre y apellido.</td><td class="num">30</td><td class="num">6</td><td class="num">S5–S8</td></tr>
+        <tr class="total"><td>Total del portafolio</td><td>Margen del 31 % sobre la meta, porque algún canal te va a fallar.</td><td class="num">~335</td><td class="num">46</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:16px" class="callout go">
+    <h3>Regla de densidad — la que más veces se rompe</h3>
+    <p>35 publicaciones repartidas por todo Buenos Aires no son un marketplace: son 35 espacios vacíos. 35 publicaciones en dos zonas son dos mercados que funcionan. Nadie maneja 40 minutos para guardar cajas.</p>
+    <p><strong>No abras una zona nueva hasta tener 8 publicaciones en la anterior.</strong> Zona 1: tu country y el barrio de alrededor. Zona 2: un barrio de departamentos denso y con mucha mudanza. Zona 3 no existe hasta la semana 7.</p>
+  </div>
+</section>
+
+<section id="seguro">
+  <div class="shead">
+    <span class="eyebrow">Tu pregunta</span>
+    <h2>¿Publico y después aseguro, o aseguro y después publico?</h2>
+    <p class="lede">Estás usando una sola palabra, “asegurar”, para dos cosas distintas. Separalas y la pregunta se resuelve sola.</p>
+  </div>
+  <div class="grid2">
+    <div class="card stack g12" style="border-color:var(--moss)">
+      <span class="chip pet">Va siempre antes de publicar</span>
+      <h3>Asegurar el compromiso</h3>
+      <p style="font-size:14.5px">Que el dueño se obligue por escrito a honrar una reserva. Medidas, precio, ventana de 60 días, reglas de acceso, qué no se puede guardar, y responder en 48 h.</p>
+      <p class="mono" style="font-size:13px;color:var(--moss)">Costo: $0. Riesgo de no hacerlo: quemás a un inquilino, que es el lado escaso.</p>
+    </div>
+    <div class="card stack g12" style="border-color:var(--signal)">
+      <span class="chip sig">Va siempre después de la reserva</span>
+      <h3>Asegurar el riesgo</h3>
+      <p style="font-size:14.5px">Una cobertura sobre el contenido guardado. Esto es lo que cuesta plata, y es exactamente lo que te preocupa pagar sobre un espacio vacío.</p>
+      <p class="mono" style="font-size:13px;color:var(--signal)">Regla: la cobertura se activa con la reserva, nunca con la publicación.</p>
+    </div>
+  </div>
+  <div style="margin-top:16px" class="callout">
+    <h3>La respuesta corta</h3>
+    <p>Publicá siempre primero. La publicación es gratis y es tu único inventario: cada día que un espacio no está publicado es un día en que nadie lo puede encontrar. Todos los costos — cobertura, candado, limpieza, cartelería — se atan a la reserva, no al alta. Un espacio vacío jamás te tiene que costar una prima.</p>
+    <p><strong>Pero publicar sin compromiso firmado es peor que no publicar.</strong> Eso es lo que en realidad tenés que “asegurar antes”, y no cuesta un peso.</p>
+  </div>
+
+  <h3 style="margin:32px 0 14px">Cómo se resuelve la cobertura en cada etapa</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th class="num">Etapa</th><th>Dónde estás</th><th>Qué ofrecés</th><th>Qué te cuesta</th></tr></thead>
+      <tbody>
+        <tr><td class="num">Hoy</td><td>0–50 publicaciones<br><span style="font-size:12.5px;color:var(--slate)">Validación</span></td><td><strong>Garantía Nave</strong> escrita, con tope por reserva, respaldada por un fondo que llenás con tu propia comisión. Sin póliza.</td><td class="num">$0 hasta que pase algo</td></tr>
+        <tr><td class="num">Después</td><td>50–200 reservas<br><span style="font-size:12.5px;color:var(--slate)">Tracción</span></td><td>Póliza colectiva negociada con un productor asesor de seguros. Prima por reserva o porcentaje sobre lo alquilado.</td><td class="num">Va dentro de tu comisión</td></tr>
+        <tr><td class="num">Escala</td><td>+200 reservas</td><td>Cobertura embebida como producto: se la cobrás al inquilino sobre el valor declarado y te quedás un margen.</td><td class="num">Pasa a ser ingreso</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="callout risk">
+      <h3>Acotá la exposición desde el día 1</h3>
+      <p style="font-size:14.5px">Excluí por escrito: dinero, joyas, documentos, obras de arte, perecederos, animales, inflamables, químicos, armas y mercadería para reventa sin declarar. Poné un tope de valor declarado por reserva. Exigí inventario fotográfico al ingreso, firmado por las dos partes.</p>
+    </div>
+    <div class="callout go">
+      <h3>Lo que de verdad destraba la confianza ahora</h3>
+      <p style="font-size:14.5px">A las 20 publicaciones nadie te pide el número de póliza. Te preguntan “¿y si me roban las cosas?”. Y eso no se contesta con un seguro: se contesta con protocolo — contrato, DNI verificado de las dos partes, inventario con fotos, tope escrito y un responsable con nombre. Es gratis y convierte más.</p>
+      <p style="font-size:14.5px"><strong>Preguntá siempre qué ya tiene el dueño.</strong> El seguro integral del consorcio y la póliza de hogar muchas veces ya alcanzan la baulera. Cobertura que descubrís es cobertura que no pagás.</p>
+    </div>
+  </div>
+</section>
+
+<section id="reglamento">
+  <div class="shead">
+    <span class="eyebrow">La trampa legal</span>
+    <h2>Lo que te puede voltear 10 publicaciones de golpe</h2>
+  </div>
+  <div class="grid2">
+    <div class="callout risk">
+      <h3>La baulera casi nunca es libre</h3>
+      <p style="font-size:14.5px">En Argentina la baulera suele estar escriturada como <strong>unidad complementaria</strong> atada al departamento. Muchos reglamentos de copropiedad solo permiten alquilarla a otros propietarios del edificio; otros exigen autorización del consorcio para cada alquiler; otros no dicen nada. Si el reglamento lo prohíbe y el dueño alquila igual, el consorcio puede multar y exigir que se deshaga el alquiler.</p>
+      <p style="font-size:14.5px">Publicar diez bauleras y que el consorcio te las voltee en la semana 6 no te cuesta diez publicaciones: te cuesta diez dueños que ya no te atienden el teléfono.</p>
+    </div>
+    <div class="stack g16">
+      <div class="card stack g8">
+        <span class="chip">Mitigación · 30 segundos por espacio</span>
+        <h3>Una sola pregunta en el alta</h3>
+        <p style="font-size:14.5px">“¿Sabés si el reglamento del edificio dice algo sobre alquilar la baulera?” Si no sabe, que le escriba al administrador — y de paso te abre la puerta con el administrador. Sumá el campo al formulario de alta desde la semana 1.</p>
+      </div>
+      <div class="card stack g8" style="background:var(--petrol-soft);border-color:transparent">
+        <span class="chip pet">El atajo que lo esquiva del todo</span>
+        <h3>Empezá adentro del edificio</h3>
+        <p style="font-size:14.5px">Vecino del 4.º B que alquila su baulera al del 9.º A. Sin extraños entrando, sin problema de reglamento, sin discusión de seguridad, el encargado como llavero. Es la versión de menor fricción del producto — y hace que la densidad sea trivial: <strong>un edificio es un mercado entero</strong>. Si un canal se te traba, este es el que abrís.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="semanas">
+  <div class="shead">
+    <span class="eyebrow">Ejecución</span>
+    <h2>Las ocho semanas</h2>
+    <p class="lede">La curva no es lineal: las primeras semanas construís la máquina y las últimas cosechás referidos y seguimientos. Cargá los dos números de cada semana; el tablero de arriba se actualiza solo.</p>
+  </div>
+  <div class="weeks" id="weeks"></div>
+</section>
+
+<section id="guiones">
+  <div class="shead">
+    <span class="eyebrow">Los guiones</span>
+    <h2>Qué escribir, literalmente</h2>
+    <p class="lede">Copialos, reemplazá lo que está en color y guardalos como respuestas rápidas de WhatsApp Business. Todos terminan en una sola pregunta concreta y fácil de contestar — esa es la parte que no hay que tocar.</p>
+  </div>
+  <div class="stack g16" id="scripts"></div>
+  <div style="margin-top:16px" class="callout">
+    <h3>La secuencia de seguimiento es donde está la plata</h3>
+    <p>Nadie te contesta el primer mensaje y vos asumís que es un no. No lo es: es un mensaje que llegó en mal momento. Tres toques más, espaciados, sin pedir disculpas y sin repetir el discurso.</p>
+  </div>
+</section>
+
+<section id="ritmo">
+  <div class="shead">
+    <span class="eyebrow">El ritmo</span>
+    <h2>La semana tipo</h2>
+    <p class="lede">Dijiste que lo que te falta es organización. Esto es la organización: un bloque sagrado de prospección a la misma hora todos los días hábiles, y nada más que se le pueda meter adelante. Si un día solo hacés el bloque, el plan sigue vivo.</p>
+  </div>
+  <div class="rhythm">
+    <div class="day"><span class="d">Lunes <b>3 h</b></span><span class="t">Armás la lista de 50 prospectos de la semana</span><span class="t">+ 10 contactos</span></div>
+    <div class="day"><span class="d">Martes <b>2,5 h</b></span><span class="t">10 contactos nuevos</span><span class="t">+ 1 h de seguimiento a conversaciones abiertas</span></div>
+    <div class="day"><span class="d">Miércoles <b>2,5 h</b></span><span class="t">10 contactos nuevos</span><span class="t">+ visitas y fotos agendadas</span></div>
+    <div class="day"><span class="d">Jueves <b>2,5 h</b></span><span class="t">10 contactos nuevos</span><span class="t">+ visitas y fotos</span></div>
+    <div class="day"><span class="d">Viernes <b>3 h</b></span><span class="t">10 contactos + publicás todo lo cerrado en la semana</span><span class="t">+ grabás el contenido de la semana entera de una</span></div>
+    <div class="day"><span class="d">Sábado <b>3 h</b></span><span class="t">Puerta a puerta en el country</span><span class="t">Es cuando la gente está en la casa. No lo muevas.</span></div>
+    <div class="day rest"><span class="d">Domingo <b>45 min</b></span><span class="t">Cargás los números y armás el lunes</span><span class="t">Nada más. En serio.</span></div>
+  </div>
+  <div class="grid3" style="margin-top:16px">
+    <div class="card stack g8"><span class="chip sig">Ventana horaria</span><p style="font-size:14px">A los encargados escribiles entre 9 y 11, o entre 16 y 18. Están en la puerta y con el teléfono en la mano.</p></div>
+    <div class="card stack g8"><span class="chip sig">Regla del bloque</span><p style="font-size:14px">El bloque de prospección va antes que el producto, antes que el contenido y antes que los mails. Siempre.</p></div>
+    <div class="card stack g8"><span class="chip sig">Herramienta</span><p style="font-size:14px">WhatsApp Business con etiquetas: <span class="mono" style="font-size:12.5px">nuevo · esperando · visita · publicado · no</span>. Es tu CRM. No armes nada más.</p></div>
+  </div>
+</section>
+
+<section id="contenido">
+  <div class="shead">
+    <span class="eyebrow">Contenido</span>
+    <h2>Construir en público, con techo de tiempo</h2>
+    <p class="lede">Te lo digo derecho: el contenido no te va a traer las 35 publicaciones en ocho semanas. Te va a traer otra cosa, que igual vale — credibilidad cuando le escribís en frío a alguien y te busca en Instagram, inbound de partners y prensa, y un efecto compuesto a partir del mes tres.</p>
+  </div>
+  <div class="callout risk" style="margin-bottom:22px">
+    <h3>Techo duro: 3,5 horas por semana</h3>
+    <p>Grabado y editado. Si le ponés quince horas hacés cero publicaciones y te vas a convencer de que estuviste trabajando. El contenido se graba el viernes, todo junto, y no se toca el resto de la semana.</p>
+  </div>
+  <div class="grid2" style="margin-bottom:22px">
+    <div class="card stack g8" style="background:var(--petrol-soft);border-color:transparent">
+      <span class="chip pet">El desbloqueo</span>
+      <h3>Filmá el trabajo, no hagas contenido aparte</h3>
+      <p style="font-size:14.5px">No tenés tiempo de hacer prospección <em>y</em> contenido. Pero sí de hacer prospección filmada. Tocar veinte puertas en el country con el celular grabando es, al mismo tiempo, el mejor formato de video que podés hacer y la tarea que ya tenías que hacer igual. El contenido <strong>es</strong> el trabajo.</p>
+    </div>
+    <div class="stack g12">
+      <div class="card stack g8"><span class="chip">Instagram · el principal</span><p style="font-size:14px">3 reels por semana + stories diarias. Acá están los dueños y los inquilinos.</p></div>
+      <div class="card stack g8"><span class="chip">LinkedIn · el subestimado</span><p style="font-size:14px">2 posts por semana. Acá están los administradores, las inmobiliarias y los operadores de self-storage. Este canal sí te puede traer oferta directa.</p></div>
+      <div class="card stack g8"><span class="chip">TikTok · costo cero</span><p style="font-size:14px">Subí el mismo reel de Instagram. Cinco minutos. No hagas contenido nativo todavía.</p></div>
+    </div>
+  </div>
+  <h3 style="margin-bottom:12px">Diez ganchos concretos, listos para grabar</h3>
+  <ol class="hooks">
+    <li><q>Tenés una baulera vacía y estás perdiendo plata todos los meses. Te hago la cuenta.</q><em>Educación al dueño. El que mejor convierte a alta.</em></li>
+    <li><q>Toqué veinte puertas en mi barrio para pedirles el garaje. Mirá lo que pasó.</q><em>El trabajo filmado. Formato reto.</em></li>
+    <li><q>Así se ve una baulera de 4 m³. Entra todo esto.</q><em>Visual, con objetos reales adentro. Resuelve la duda que todos tienen.</em></li>
+    <li><q>Semana 3 construyendo Nave: 9 publicaciones, 147 mensajes, 3 “no” rotundos.</q><em>Números en vivo. Es el que te construye la audiencia de founders.</em></li>
+    <li><q>El encargado del edificio sabe qué bauleras están vacías. Nadie le pregunta nunca.</q><em>LinkedIn. Apunta directo a administradores.</em></li>
+    <li><q>Le pregunté a un administrador de consorcios qué opina de esto. No esperaba esa respuesta.</q><em>Colaboración. Te abre el canal mientras grabás.</em></li>
+    <li><q>Cuánto sale guardar tus cosas: self-storage contra la baulera del vecino.</q><em>Comparación de precios reales. Es el que se comparte.</em></li>
+    <li><q>Me dijeron que no catorce veces esta semana. Te leo las razones.</q><em>Vulnerabilidad + insight. El que mejor performa en LinkedIn.</em></li>
+    <li><q>Medí el garaje de mi vieja y vale más de lo que pensaba.</q><em>Personal, replicable, invita a que midan el suyo.</em></li>
+    <li><q>Día 1 contra día 30 de Nave.</q><em>Progreso de producto. Guardalo para cuando tengas algo lindo que mostrar.</em></li>
+  </ol>
+</section>
+
+<section id="metaads">
+  <div class="shead">
+    <span class="eyebrow">Meta Ads</span>
+    <h2>Tu instinto es bueno, el momento está mal</h2>
+  </div>
+  <div class="grid2">
+    <div class="callout risk">
+      <h3>Por qué no ahora</h3>
+      <p style="font-size:14.5px"><strong>Uno.</strong> No tenés presupuesto. Meta Ads sin plata es una clase teórica que se te olvida antes de poder aplicarla.</p>
+      <p style="font-size:14.5px"><strong>Dos.</strong> Necesitás oferta, no demanda. Meta es excelente para demanda. Para conseguir que un señor publique su garaje, un WhatsApp tuyo convierte decenas de veces más que un anuncio.</p>
+      <p style="font-size:14.5px"><strong>Tres.</strong> Diez horas de curso en la semana 1 son doscientos contactos que no hiciste. Son cerca de nueve publicaciones que no van a existir.</p>
+    </div>
+    <div class="stack g16">
+      <div class="card stack g12">
+        <span class="chip sig">Semana 5 · bloque único de 3 horas</span>
+        <h3>Qué aprender exactamente</h3>
+        <p style="font-size:14.5px"><strong>Hora 1 — Configurar, no estudiar.</strong> Business Manager, cuenta publicitaria, Pixel y Conversions API en el sitio, catálogo. Que quede andando aunque no gastes.</p>
+        <p style="font-size:14.5px"><strong>Hora 2 — Lead Ads.</strong> El formato con formulario nativo, que es el único que te sirve para captar dueños. Objetivo, público por radio de 5 km alrededor de tus zonas, y el creativo.</p>
+        <p style="font-size:14.5px"><strong>Hora 3 — Leer métricas.</strong> CPL, CTR, frecuencia, y sobre todo cuándo matar un anuncio.</p>
+        <p style="font-size:14.5px;color:var(--slate)">Fuente: Meta Blueprint, que es oficial y gratis, más <em>un</em> walkthrough en YouTube. Uno. Mirar ocho videos es procrastinar con cara de estudiar.</p>
+      </div>
+      <div class="card stack g8" style="background:var(--petrol-soft);border-color:transparent">
+        <span class="chip pet">Mientras tanto, gratis y casi lo mismo</span>
+        <p style="font-size:14.5px"><strong>Facebook Marketplace:</strong> publicá cada espacio, uno por uno. Es el canal de mayor intención de compra en Argentina y no cuesta nada.</p>
+        <p style="font-size:14.5px"><strong>Grupos vecinales:</strong> diez grupos de tus dos zonas, un posteo por semana en cada uno, rotando el formato.</p>
+        <p style="font-size:14.5px">Si en la semana 6 querés probar con plata, tirá lo mínimo que puedas durante cinco días. No para conseguir clientes: para saber tu costo por lead antes de tener presupuesto de verdad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demanda">
+  <div class="shead">
+    <span class="eyebrow">El track paralelo</span>
+    <h2>La meta de al lado que te cambia todo</h2>
+    <p class="lede">Te voy a cumplir las 35 publicaciones. Pero te lo digo una vez y sigo: 35 publicaciones con cero reservas no valida el producto, valida que sabés conseguir oferta. Y a las ocho semanas, los dueños que no cobraron un peso se van y se llevan la buena voluntad.</p>
+  </div>
+  <div class="callout go" style="margin-bottom:18px">
+    <h3>Agregale una meta chica: 5 reservas reales</h3>
+    <p>Cuesta muy poco trabajo al lado de lo otro, y es la diferencia entre “conseguí espacios” y “esto funciona”. No esperes a que la plataforma haga el match: hacelo a mano por WhatsApp, vos, uno por uno. En validación eso no es trampa, es el método.</p>
+  </div>
+  <div class="grid3">
+    <div class="card stack g8"><span class="chip pet">El mejor canal de demanda</span><h3>Empresas de mudanzas</h3><p style="font-size:14px;color:var(--slate)">Sus clientes necesitan guardar cosas hoy, no en abstracto. Diez mudanceras de tus zonas, comisión por referido. Una hora de trabajo, la mejor demanda que vas a conseguir en todo el plan.</p></div>
+    <div class="card stack g8"><span class="chip pet">Segundo</span><h3>Inmobiliarias</h3><p style="font-size:14px;color:var(--slate)">El que pone la casa en venta tiene que despejar para mostrarla. Es un problema con fecha límite, que es justo el tipo de demanda que convierte.</p></div>
+    <div class="card stack g8"><span class="chip pet">Tercero</span><h3>Lista de espera</h3><p style="font-size:14px;color:var(--slate)">Todo interesado en alquilar va a una lista con su zona. Cuando llegás a 8 espacios en esa zona, les escribís a todos el mismo día. Demanda concentrada contra oferta concentrada.</p></div>
+  </div>
+</section>
+
+<section id="riesgos">
+  <div class="shead">
+    <span class="eyebrow">Riesgos</span>
+    <h2>Las siete formas de llegar a la semana 8 sin nada</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th style="width:30%">Qué lo mata</th><th>Cómo se ve cuando está pasando</th><th>Qué hacés</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispersión geográfica</strong></td><td>Tenés 22 publicaciones repartidas en nueve barrios y ninguna reserva.</td><td>No abrís zona nueva hasta 8 en la anterior. Sin excepciones.</td></tr>
+        <tr><td><strong>Oferta sin demanda</strong></td><td>Los dueños de la semana 2 dejan de contestarte en la semana 6.</td><td>El track de demanda desde la semana 4, y avisales de entrada que esto es una prueba.</td></tr>
+        <tr><td><strong>Compromiso falso</strong></td><td>Alguien reserva y el dueño se arrepiente.</td><td>Acuerdo de Disponibilidad confirmado por escrito antes de publicar. Siempre.</td></tr>
+        <tr><td><strong>El contenido se come todo</strong></td><td>Subiste nueve reels y hiciste doce contactos.</td><td>Techo de 3,5 h. El bloque de prospección va primero, todos los días.</td></tr>
+        <tr><td><strong>Reglamento de copropiedad</strong></td><td>El consorcio voltea bauleras ya publicadas.</td><td>La pregunta en el alta. Y si se complica, empezás adentro del edificio.</td></tr>
+        <tr><td><strong>Cero seguimiento</strong></td><td>400 contactos, tasa del 3 %, y una carpeta llena de “después te digo”.</td><td>La secuencia de 3 toques. Ahí está el 80 % de los sí.</td></tr>
+        <tr><td><strong>El tema impositivo</strong></td><td>Aparece recién cuando entra la primera plata y te frena todo.</td><td>Media hora con un contador ahora: quién factura qué, y cómo cobrás tu comisión. No lo resuelvas leyendo foros.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="stack g8" style="max-width:52ch">
+      <span class="eyebrow">Dos reglas para las ocho semanas</span>
+      <p style="font-size:15px;color:var(--ink)"><strong>Una:</strong> el bloque de prospección no se negocia, ni por el producto ni por el contenido ni por un mail urgente.<br><strong>Dos:</strong> el número del tablero es el número real. En el momento en que te lo empezás a inflar, el plan deja de servirte para decidir.</p>
+    </div>
+    <span class="savenote" id="savenote">Guardando localmente</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+var WEEKS = [
+ {n:1, t:"Armás la máquina", goal:"2 publicaciones · 50 contactos", newp:2, cum:2, focus:"Esta semana casi no cerrás espacios: construís las herramientas que hacen posibles los otros 33. Es la semana con más tentación de saltearse y la que más caro se paga.", items:[
+  "Definir las 2 zonas y escribirlas en un papel (country + 1 barrio denso de departamentos)",
+  "Armar la planilla maestra de prospectos: nombre, canal, zona, estado, último toque, próxima acción",
+  "Cargar los primeros 100 prospectos en la planilla",
+  "Escribir los 4 guiones y guardarlos como respuestas rápidas de WhatsApp Business",
+  "Armar el formulario de alta de espacio (Tally o Google Forms, 10 campos, incluido el del reglamento)",
+  "Redactar el Acuerdo de Disponibilidad en una carilla, confirmable por WhatsApp",
+  "Definir por escrito el tope de la Garantía Nave y la lista de exclusiones",
+  "Armar el checklist de fotos y probarlo con un espacio propio",
+  "Etiquetas de WhatsApp Business configuradas: nuevo / esperando / visita / publicado / no",
+  "Primeros 50 contactos y 2 publicaciones confirmadas entre vecinos"]},
+
+ {n:2, t:"El country a fondo", goal:"3 nuevas · acumulado 5", newp:3, cum:5, focus:"Tu ventaja injusta es que vivís adentro. Usala entera esta semana, porque el efecto de novedad dura poco y el permiso de la administración vale más que cincuenta mensajes.", items:[
+  "Reunión con la administración del country: contarles qué hacés y pedir permiso para postear en el grupo",
+  "Posteo en el grupo de WhatsApp o la intranet del barrio (uno bueno, no tres mediocres)",
+  "Puerta a puerta el sábado: 20 casas, con el celular grabando",
+  "Cartel o folleto en la garita y en el SUM, si la administración lo permite",
+  "Mapear 40 edificios de la Zona 2 en Google Maps con dirección anotada",
+  "Contactar los primeros 30 encargados de edificio",
+  "Definir cuánto le pagás al encargado por espacio publicado y alquilado, y escribirlo",
+  "50 contactos y 3 publicaciones nuevas"]},
+
+ {n:3, t:"Encargados a escala", goal:"4 nuevas · acumulado 9", newp:4, cum:9, focus:"Semana de volumen puro sobre el canal de mayor apalancamiento, y de abrir el canal lento que después rinde solo.", items:[
+  "40 encargados más (total acumulado: 70)",
+  "Bajar la lista del Registro Público de Administradores de Consorcios (CABA y/o Provincia)",
+  "Armar el one-pager en PDF para administradores: qué es, qué gana el consorcio, cero costo",
+  "Contactar 20 administradores",
+  "Publicar cada espacio que tengas también en Facebook Marketplace",
+  "Entrar a 10 grupos vecinales de Facebook de tus dos zonas",
+  "50 contactos y 4 publicaciones nuevas"]},
+
+ {n:4, t:"Checkpoint y demanda", goal:"5 nuevas · acumulado 14", newp:5, cum:14, focus:"Punto de control de medio término. Acá se decide si el plan sigue como está o cambia. Y se enciende el lado de la demanda, que es lo que convierte espacios en validación.", items:[
+  "Calcular la tasa real contacto → publicación y compararla con el 8,75 % que necesitás",
+  "Identificar el canal que peor rinde y dejarlo de lado sin culpa",
+  "Duplicar el tiempo del canal que mejor rinde",
+  "Contactar 10 empresas de mudanzas de tus zonas con comisión por referido",
+  "Armar la lista de espera de demanda por zona",
+  "Cerrar la primera reserva real, aunque la hagas vos a mano por WhatsApp",
+  "50 contactos y 5 publicaciones nuevas"]},
+
+ {n:5, t:"Self-storage y Meta Ads", goal:"5 nuevas · acumulado 19", newp:5, cum:19, focus:"El canal que te puede dar cinco espacios de un solo sí, y el único bloque de estudio del plan.", items:[
+  "Listar 25 self-storage, guardamuebles y depósitos de mudanceras de tus zonas",
+  "Contactarlos a todos preguntando concretamente por unidades vacías hoy",
+  "Bloque único de 3 horas de Meta Ads: configurar, no estudiar",
+  "Business Manager, Pixel y Conversions API andando",
+  "Pedirle 3 referidos con nombre y apellido a cada host ya publicado",
+  "50 contactos y 5 publicaciones nuevas"]},
+
+ {n:6, t:"Referidos y rescate", goal:"6 nuevas · acumulado 25", newp:6, cum:25, focus:"La semana más rentable del plan, y la que casi nadie hace: volver sobre todo lo que quedó tibio en las semanas 1 a 3.", items:[
+  "Volver a escribirle a TODOS los “no ahora” y “después te digo” de las semanas 1 a 3",
+  "Mandar el tercer toque de la secuencia a todo lo que quedó abierto",
+  "Sistema de referidos activo: definir qué le das al host que trae a otro",
+  "Postear en los 10 grupos de Facebook con un espacio real ya publicado",
+  "Contactar 5 inmobiliarias de tus zonas",
+  "50 contactos y 6 publicaciones nuevas"]},
+
+ {n:7, t:"Densidad y reservas", goal:"5 nuevas · acumulado 30", newp:5, cum:30, focus:"Dejás de sumar por sumar y empezás a cerrar mercados. Si una zona no llegó a 8, esta es la semana de empujarla.", items:[
+  "Verificar que Zona 1 y Zona 2 tengan 8 o más publicaciones cada una",
+  "Si una zona no llegó a 8, todo el esfuerzo de la semana va ahí",
+  "Escribirle a toda la lista de espera de demanda de cada zona el mismo día",
+  "Llamar a los hosts publicados y contarles qué está pasando (retención)",
+  "Recién ahora, si las dos zonas están cerradas, abrir la Zona 3",
+  "50 contactos y 5 publicaciones nuevas"]},
+
+ {n:8, t:"Cierre y lectura", goal:"6 nuevas · acumulado 36", newp:6, cum:36, focus:"Cerrás los pipelines abiertos y, sobre todo, escribís lo que aprendiste. Sin esa lectura tenés 36 espacios y ninguna conclusión.", items:[
+  "Cerrar todo lo que quedó en estado visita o esperando",
+  "Último toque a todo el pipeline abierto (“¿lo dejamos para más adelante o lo damos de baja?”)",
+  "Escribir el informe de validación: qué canal escala, qué precio funciona, qué objeción se repite",
+  "Calcular el costo en horas por publicación de cada canal",
+  "Decidir dónde van los primeros pesos de presupuesto real",
+  "50 contactos y 6 publicaciones nuevas"]}
+];
+
+var SCRIPTS = [
+ {id:"vecino", t:"Vecino del country", w:"El más caliente · WhatsApp", body:
+"Hola [Nombre], soy [tu nombre], vivo en [calle / lote]. Te escribo por algo medio distinto.\n\nEstoy armando Nave, una plataforma para que la gente alquile el espacio que le sobra — bauleras, garajes, altillos — a vecinos que necesitan guardar cosas.\n\nMe acordé de vos porque [razón específica: vi que tenés medio garaje libre / me comentó [nombre]].\n\nUn garaje de 3x3 en la zona se alquila hoy entre [$X] y [$Y] por mes. Vos no ponés un peso: yo saco las fotos, hago el contrato, verifico al inquilino y me encargo del cobro.\n\nSi te interesa, paso diez minutos, tomo las medidas y lo dejo publicado. Si no aparece nadie, no perdiste nada.\n\n¿Te sirve el sábado a la mañana?"},
+
+ {id:"encargado", t:"Encargado de edificio", w:"El más apalancado · WhatsApp o en la puerta", body:
+"Hola, ¿qué tal? Soy [tu nombre], de Nave. Te hago corta.\n\nEn casi todos los edificios hay bauleras vacías juntando polvo. Nosotros conectamos al propietario con alguien que necesita guardar cosas, y ponemos el contrato, la verificación del inquilino y el cobro.\n\nA vos te pagamos [$X] por cada baulera que se publique y se alquile. No tenés que hacer nada más que decirme cuáles están vacías y pasarme el contacto del propietario.\n\n¿Cuántas bauleras vacías calculás que hay hoy en el edificio?"},
+
+ {id:"admin", t:"Administrador de consorcio", w:"El de techo más alto · Mail o WhatsApp", body:
+"[Nombre], buen día. Soy [tu nombre], fundador de Nave.\n\nTrabajamos con consorcios para poner en valor las bauleras y cocheras vacías: el propietario las alquila por mes y nosotros ponemos el contrato, la verificación de identidad del inquilino y la gestión del cobro.\n\nPara el consorcio es cero costo y cero gestión, más una comisión de referencia por cada espacio que se alquile en los edificios que administra.\n\nEstamos arrancando con tres edificios en [zona] antes de abrir a más. ¿Le interesa que se lo muestre en una llamada de quince minutos esta semana?"},
+
+ {id:"storage", t:"Self-storage con vacancia", w:"Un sí = 5 a 15 unidades · Teléfono o mail", body:
+"Hola [nombre], soy [tu nombre] de Nave.\n\nSomos un marketplace de espacios de guardado. Tenemos demanda en [zona] y hoy nos falta oferta.\n\nConcreto: ¿tenés unidades vacías en este momento? Te las publicamos sin costo y te mandamos los inquilinos. Cobrás vos; nosotros cobramos comisión solamente sobre lo que se alquila.\n\nSi tenés vacancia, para vos es upside puro. ¿Cuántas unidades libres tenés hoy?"},
+
+ {id:"follow", t:"Secuencia de seguimiento", w:"Acá está el 80 % de los sí · Tres toques", body:
+"— Día 3 —\nHola [nombre], ¿pudiste verlo? Cualquier duda te la contesto por acá.\n\n— Día 7 —\n[nombre], te dejo esto para que veas cómo queda: [link a un espacio ya publicado de la zona]. Si querés paso el sábado y lo dejamos listo.\n\n— Día 14 —\nÚltima de mi parte así no te molesto más: ¿lo dejamos para más adelante o lo damos de baja? Cualquiera de las dos me sirve, en serio."}
+];
+
+var TARGET_PUB = 35, TARGET_CON = 400;
+var state = {checks:{}, weeks:{}};
+var store = null, docRef = null, saveTimer = null;
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function el(tag, cls, html){var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e;}
+
+/* ---------- render weeks ---------- */
+function renderWeeks(){
+  var host = document.getElementById("weeks");
+  host.textContent = "";
+  WEEKS.forEach(function(w){
+    var wk = el("div","week"); wk.id = "week-"+w.n;
+    var top = el("div","wtop");
+    top.appendChild(el("span","wnum","S"+w.n));
+    var ti = el("div","wtitle");
+    ti.appendChild(el("h3",null,esc(w.t)));
+    ti.appendChild(el("span","wgoal",esc(w.goal)));
+    top.appendChild(ti);
+    wk.appendChild(top);
+
+    var body = el("div","wbody");
+    body.appendChild(el("p",null,'<span style="font-size:14.5px;color:var(--slate)">'+esc(w.focus)+"</span>"));
+
+    var ul = el("ul","checks");
+    w.items.forEach(function(item,i){
+      var id = "w"+w.n+"i"+i;
+      var li = el("li");
+      var lab = el("label");
+      var cb = el("input"); cb.type="checkbox"; cb.id=id; cb.checked = !!state.checks[id];
+      cb.addEventListener("change", function(){
+        if(cb.checked) state.checks[id]=true; else delete state.checks[id];
+        queueSave();
+      });
+      lab.appendChild(cb);
+      lab.appendChild(el("span",null,esc(item)));
+      li.appendChild(lab); ul.appendChild(li);
+    });
+    body.appendChild(ul);
+
+    var m = el("div","wmetrics");
+    ["contactos","publicaciones"].forEach(function(key){
+      var f = el("div","field");
+      var lb = el("label", null, key === "contactos" ? "Contactos" : "Publicaciones");
+      var inp = el("input");
+      inp.type="number"; inp.min="0"; inp.step="1"; inp.id="m-"+w.n+"-"+key; inp.placeholder="0";
+      lb.setAttribute("for", inp.id);
+      var wd = state.weeks["s"+w.n];
+      if(wd && wd[key] != null) inp.value = wd[key];
+      inp.addEventListener("input", function(){
+        var k = "s"+w.n;
+        if(!state.weeks[k]) state.weeks[k] = {};
+        var v = parseInt(inp.value,10);
+        if(isNaN(v) || v < 0) delete state.weeks[k][key]; else state.weeks[k][key] = v;
+        refresh(); queueSave();
+      });
+      f.appendChild(lb); f.appendChild(inp); m.appendChild(f);
+    });
+    m.appendChild(el("span","wtally","Meta acumulada al cierre de S"+w.n+": "+w.cum+" publicaciones"));
+    body.appendChild(m);
+
+    wk.appendChild(body);
+    host.appendChild(wk);
+  });
+}
+
+/* ---------- render scripts ---------- */
+function renderScripts(){
+  var host = document.getElementById("scripts");
+  host.textContent = "";
+  SCRIPTS.forEach(function(s){
+    var box = el("div","script");
+    var top = el("div","sctop");
+    var l = el("div","l");
+    l.appendChild(el("h3",null,esc(s.t)));
+    l.appendChild(el("span","w",esc(s.w)));
+    top.appendChild(l);
+    var btn = el("button","copy","Copiar");
+    btn.type="button";
+    btn.addEventListener("click", function(){ copy(s.body, btn); });
+    top.appendChild(btn);
+    box.appendChild(top);
+    var pre = el("pre", null, esc(s.body).replace(/\[([^\]]+)\]/g, function(_,inner){ return "<b>["+inner+"]</b>"; }));
+    box.appendChild(pre);
+    host.appendChild(box);
+  });
+}
+
+function copy(text, btn){
+  function done(){
+    var old = btn.textContent;
+    btn.textContent = "Copiado"; btn.classList.add("ok");
+    setTimeout(function(){ btn.textContent = old; btn.classList.remove("ok"); }, 1600);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+  } else { fallback(text, done); }
+}
+function fallback(text, done){
+  var ta = document.createElement("textarea");
+  ta.value = text; ta.setAttribute("readonly","");
+  ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); done(); } catch(e){ /* clipboard blocked */ }
+  document.body.removeChild(ta);
+}
+
+/* ---------- dashboard ---------- */
+function refresh(){
+  var pub = 0, con = 0, lastLoaded = 0;
+  WEEKS.forEach(function(w){
+    var d = state.weeks["s"+w.n] || {};
+    if(d.publicaciones) pub += d.publicaciones;
+    if(d.contactos) con += d.contactos;
+    if(d.publicaciones != null || d.contactos != null) lastLoaded = w.n;
+  });
+
+  var pubPct = Math.min(100, pub / TARGET_PUB * 100);
+  document.getElementById("s-pub").innerHTML = pub + "<small> / 35</small>";
+  document.getElementById("s-pub-bar").style.width = pubPct + "%";
+  document.getElementById("s-con").innerHTML = con + "<small> / 400</small>";
+  document.getElementById("s-con-bar").style.width = Math.min(100, con / TARGET_CON * 100) + "%";
+
+  var rate = document.getElementById("s-rate"), rateN = document.getElementById("s-rate-n");
+  if(con >= 20){
+    var r = pub / con * 100;
+    rate.textContent = r.toFixed(1).replace(".",",") + " %";
+    if(r < 6){
+      rate.style.color = "var(--brick)";
+      rateN.textContent = "Por debajo de lo necesario. El problema no es volumen: revisá a quién le escribís y cómo abrís el mensaje.";
+    } else if(r > 12){
+      rate.style.color = "var(--moss)";
+      rateN.textContent = "Muy por encima del plan. Tu guion funciona — subí el volumen, estás dejando publicaciones sobre la mesa.";
+    } else {
+      rate.style.color = "";
+      rateN.textContent = "En rango. Sostené el volumen de 50 contactos por semana y llegás.";
+    }
+  } else {
+    rate.textContent = "—"; rate.style.color = "";
+    rateN.textContent = "Necesitás 8,75 % para llegar a 35 con 400 contactos.";
+  }
+
+  var pace = document.getElementById("s-pace"), paceN = document.getElementById("s-pace-n");
+  if(lastLoaded > 0){
+    var expected = WEEKS[lastLoaded-1].cum;
+    var diff = pub - expected;
+    pace.textContent = (diff >= 0 ? "+" : "") + diff;
+    pace.style.color = diff >= 0 ? "var(--moss)" : "var(--brick)";
+    paceN.textContent = diff >= 0
+      ? "Vas " + diff + " por encima del plan al cierre de S" + lastLoaded + " (meta: " + expected + ")."
+      : "Te faltan " + Math.abs(diff) + " para el plan de S" + lastLoaded + " (meta: " + expected + "). Recuperalo con seguimiento, no con más mensajes nuevos.";
+  } else {
+    pace.textContent = "—"; pace.style.color = "";
+    paceN.textContent = "Se calcula con la última semana que cargues.";
+  }
+
+  var note = document.getElementById("s-pub-n");
+  if(pub === 0) note.textContent = "Arrancá cargando la semana 1.";
+  else if(pub >= 50) note.textContent = "Pasaste el techo del rango. Ahora todo el esfuerzo va a reservas.";
+  else if(pub >= TARGET_PUB) note.textContent = "Meta cumplida. Lo que sigue es densidad y reservas, no más altas.";
+  else if(pub >= 20) note.textContent = "Ya estás dentro del rango de validación. Faltan " + (TARGET_PUB - pub) + " para la meta.";
+  else note.textContent = "Faltan " + (20 - pub) + " para entrar en el rango de validación.";
+
+  // marcar la semana en curso: la primera sin números cargados
+  var current = 0;
+  for(var i=0;i<WEEKS.length;i++){
+    var d = state.weeks["s"+WEEKS[i].n] || {};
+    if(d.contactos == null && d.publicaciones == null){ current = WEEKS[i].n; break; }
+  }
+  WEEKS.forEach(function(w){
+    var node = document.getElementById("week-"+w.n);
+    if(node) node.classList.toggle("now", w.n === current);
+  });
+}
+
+/* ---------- persistence ---------- */
+var LS = "nave-plan-v1";
+function loadLocal(){
+  try {
+    var raw = localStorage.getItem(LS);
+    if(raw){
+      var p = JSON.parse(raw);
+      if(p && typeof p === "object"){
+        state.checks = p.checks || {};
+        state.weeks = p.weeks || {};
+      }
+    }
+  } catch(e){ /* storage unavailable — arrancamos vacíos */ }
+}
+function saveLocal(){
+  try { localStorage.setItem(LS, JSON.stringify(state)); } catch(e){ /* no-op */ }
+}
+function queueSave(){
+  saveLocal();
+  if(!docRef) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    docRef.set({checks: state.checks, weeks: state.weeks, updated: new Date().toISOString()})
+      .then(function(){ setNote("Guardado en la nube", true); })
+      .catch(function(){ setNote("Guardando localmente", false); });
+  }, 700);
+}
+function setNote(text, cloud){
+  var n = document.getElementById("savenote");
+  n.innerHTML = cloud ? "<b>&#9679;</b> " + text : text;
+}
+
+/* ---------- boot ---------- */
+loadLocal();
+renderWeeks();
+renderScripts();
+refresh();
+
+if(window.claude && typeof window.claude.use === "function"){
+  window.claude.use("db").then(function(db){
+    if(!db) return;
+    store = db;
+    docRef = db.doc("plan/estado");
+    docRef.onSnapshot(function(snap){
+      if(!snap.exists) { setNote("Guardado en la nube", true); return; }
+      var d = snap.data() || {};
+      if(snap.metadata && snap.metadata.hasPendingWrites) return;
+      state.checks = d.checks || {};
+      state.weeks = d.weeks || {};
+      saveLocal();
+      renderWeeks();
+      refresh();
+      setNote("Guardado en la nube", true);
+    }, function(){ docRef = null; setNote("Guardando localmente", false); });
+  }).catch(function(){ /* seguimos con localStorage */ });
+}
+})();
+</script>
