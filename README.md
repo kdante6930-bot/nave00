@@ -1,36 +1,40 @@
-# Nave — Plan de validación de producto
+# Nave — Plan de validación de producto (v2)
 
-Plan de marketing orgánico para llevar Nave de 0 a **35 espacios publicados en 8 semanas**,
-con presupuesto cero y un solo operador.
+Plan de marketing orgánico + pauta para llevar Nave de 0 a **50 espacios publicados en 8 semanas**,
+arrancando casa por casa en Miraflores Country Club (Garín, km 37,5 de Panamericana Ramal Pilar).
 
 **Tablero interactivo:** https://claude.ai/code/artifact/3d0ca6c9-28ea-4df9-b525-58676cb6ff4f
 
-El tablero guarda el progreso: marcá las tareas de cada semana y cargá dos números por semana
-(contactos hechos y publicaciones cerradas). Con eso calcula la tasa real de conversión y avisa
-si el problema es volumen o es el guion.
+El tablero guarda el progreso: marcás las tareas de cada semana y cargás tres números por semana
+(contactos, publicaciones confirmadas, reservas reales). Con eso calcula la tasa real de conversión
+y el ritmo contra el plan.
 
-## Qué hay en el plan
+## Qué cambió de v1 a v2
+
+| | v1 | v2 |
+|---|---|---|
+| Meta | 35 publicaciones | 50 (piso de validación 20, ideal 35) |
+| Densidad | "No abras zona nueva hasta 8 en la anterior" | Aceptá toda la oferta; 70 % de las horas a menos de 15 km de Miraflores |
+| Pauta | Sin presupuesto; Meta Ads diferido | $300.000/mes desde S3, Google Search primero, tracking antes del primer peso |
+| Frentes | Mezcla genérica | 8 frentes en el orden del fundador, uno nuevo por semana |
+| Demanda | Track paralelo | Sección "cómo no parecer vacío sin inventar nada" (reemplaza el pedido de demanda simulada) |
+
+## Secciones
 
 | Sección | Qué resuelve |
 |---|---|
-| Tablero | Progreso vivo contra la meta, tasa contacto → publicación, ritmo vs. plan |
+| Tablero | Publicaciones, reservas, contactos, tasa y ritmo vs. plan |
 | La regla | Definición cerrada de "publicación confirmada" (5 requisitos) |
-| La matemática | Por qué 400 contactos y no 800: apalancamiento por canal |
-| Los canales | 6 frentes ordenados por apalancamiento, con meta de publicaciones y ventana |
-| Compromiso vs. seguro | Cuándo publicar, cuándo asegurar, y las 3 etapas de cobertura |
-| La trampa legal | Reglamento de copropiedad y bauleras como unidad complementaria |
-| Las 8 semanas | Checklist ejecutable semana por semana |
-| Los guiones | 5 guiones de WhatsApp listos para copiar |
-| El ritmo | La semana tipo, con el bloque de prospección como eje |
-| Contenido | Build in public con techo de 3,5 h/semana |
-| Meta Ads | Por qué no ahora, y el bloque de 3 h en la semana 5 |
-| Demanda | El track paralelo de 5 reservas reales |
-| Riesgos | Las 7 formas de llegar a la semana 8 sin nada |
-
-## Las dos reglas
-
-1. El bloque de prospección no se negocia — ni por el producto, ni por el contenido, ni por un mail urgente.
-2. El número del tablero es el número real. En cuanto se infla, el plan deja de servir para decidir.
+| La matemática | Por qué 50 sale con 420 contactos: apalancamiento por frente |
+| Los frentes | 8 frentes con contactos, publicaciones esperadas y semana de apertura |
+| Playbooks | Miraflores casa por casa · Google Maps · Zonaprop/ML/Marketplace · Depósitos y logísticas · Encargados y administradores |
+| Compromiso vs. seguro | Cuándo publicar, cuándo asegurar, 3 etapas de cobertura |
+| La trampa legal | Reglamento de copropiedad; cocheras primero; match intra-edificio |
+| Confianza | Señales de actividad reales vs. las que matan el producto |
+| Pauta | Google Search ($10.000/día, 2 grupos, radio 15 km, reglas de corte) · Meta con avatar de IA (presenta, no testimonia) |
+| Las 8 semanas | Checklist ejecutable con carga de métricas |
+| Guiones | 8 guiones de WhatsApp/puerta + 3 guiones de video |
+| Ritmo · Contenido · Riesgos | Semana tipo, techo de contenido, 9 riesgos |
 
 ## Archivos
 
