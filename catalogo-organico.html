@@ -1,0 +1,480 @@
+<title>Catálogo orgánico Nave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F1F2EE; --surface:#FBFBF9; --surface-2:#E9EBE5;
+  --ink:#0F1A18; --slate:#5B6864; --faint:#8A958F;
+  --rule:#D2D8D1; --rule-hard:#0F1A18;
+  --petrol:#14504B; --petrol-soft:#DDE9E6;
+  --signal:#B5830A; --signal-bg:#F7EBC8;
+  --brick:#A63D28; --brick-bg:#F6E3DD;
+  --moss:#3E7A4E; --moss-bg:#DFEBE0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1413; --surface:#131E1C; --surface-2:#1B2826;
+    --ink:#E4EAE6; --slate:#9DACA6; --faint:#6E7D77;
+    --rule:#26332F; --rule-hard:#5E726C;
+    --petrol:#63BDB0; --petrol-soft:#16302D;
+    --signal:#E8B94A; --signal-bg:#2E2413;
+    --brick:#E08A70; --brick-bg:#31201B;
+    --moss:#77BB86; --moss-bg:#17291C;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1413; --surface:#131E1C; --surface-2:#1B2826;
+  --ink:#E4EAE6; --slate:#9DACA6; --faint:#6E7D77;
+  --rule:#26332F; --rule-hard:#5E726C;
+  --petrol:#63BDB0; --petrol-soft:#16302D;
+  --signal:#E8B94A; --signal-bg:#2E2413;
+  --brick:#E08A70; --brick-bg:#31201B;
+  --moss:#77BB86; --moss-bg:#17291C;
+}
+*{box-sizing:border-box}
+body{background:var(--paper); color:var(--ink); font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif; font-variation-settings:"wdth" 100; font-size:16px; line-height:1.6; margin:0; padding:0; -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px; margin:0 auto; padding-inline:20px; padding-block:0}
+h1,h2,h3{font-variation-settings:"wdth" 112; text-wrap:balance; margin:0; line-height:1.12; letter-spacing:-.015em}
+h1{font-size:clamp(30px,5.2vw,52px); font-weight:700}
+h2{font-size:clamp(22px,3vw,30px); font-weight:700}
+h3{font-size:15.5px; font-weight:600; font-variation-settings:"wdth" 105; line-height:1.3}
+p{margin:0}
+a{color:var(--petrol)}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
+.lede{font-size:clamp(16px,2vw,19px); color:var(--slate); max-width:64ch; line-height:1.55}
+.small{font-size:14px; color:var(--slate); line-height:1.5}
+.stack{display:flex; flex-direction:column}
+.g6{gap:6px}.g8{gap:8px}.g12{gap:12px}.g16{gap:16px}
+
+.titleblock{border-bottom:2px solid var(--rule-hard); background:var(--surface)}
+.tb-grid{display:grid; grid-template-columns:1fr; gap:24px; padding-block:36px 24px}
+.board{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden}
+.stat{background:var(--surface); padding:12px 14px 14px; display:flex; flex-direction:column; gap:3px}
+.stat .k{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint)}
+.stat .v{font-family:"IBM Plex Mono",monospace; font-size:28px; font-weight:600; line-height:1.1; font-variant-numeric:tabular-nums}
+.stat.hero{background:var(--petrol-soft)} .stat.hero .v{color:var(--petrol)}
+
+/* taxonomy strip */
+.tax{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden; margin-top:4px}
+.tax a{background:var(--surface); padding:11px 13px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; gap:2px}
+.tax a:hover{background:var(--surface-2)}
+.tax a b{font-size:13.5px; font-weight:600; font-variation-settings:"wdth" 105}
+.tax a span{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--faint)}
+
+/* filters */
+.filters{position:sticky; top:0; z-index:5; background:var(--paper); border-bottom:1px solid var(--rule); padding-block:10px}
+.fwrap{display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center}
+.fgroup{display:flex; align-items:center; gap:5px; flex-wrap:wrap}
+.fgroup .lbl{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin-right:3px}
+.fbtn{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.05em; padding:5px 9px; border:1px solid var(--rule); background:var(--surface); color:var(--slate); border-radius:2px; cursor:pointer}
+.fbtn[aria-pressed="true"]{background:var(--rule-hard); color:var(--paper); border-color:var(--rule-hard)}
+.fbtn:focus-visible,.search:focus-visible,.estado:focus-visible{outline:2px solid var(--signal); outline-offset:2px}
+.search{font-family:"Archivo",system-ui,sans-serif; font-size:14px; padding:6px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); min-width:170px; flex:1 1 170px; max-width:280px}
+.fcount{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--faint); margin-left:auto; font-variant-numeric:tabular-nums}
+.toggle{display:inline-flex; gap:7px; align-items:center; font-size:13px; color:var(--slate); cursor:pointer}
+.toggle input{accent-color:var(--petrol)}
+
+/* families */
+section.fam{padding-block:clamp(30px,4.5vw,48px); border-top:1px solid var(--rule); scroll-margin-top:118px}
+section.fam[hidden]{display:none}
+.fhead{display:flex; flex-direction:column; gap:7px; margin-bottom:18px; max-width:70ch}
+.fhead .n{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--faint); letter-spacing:.1em}
+
+/* option rows */
+.opts{display:flex; flex-direction:column; gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden}
+.opt{background:var(--surface); padding:13px 16px; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 18px; align-items:start}
+.opt[hidden]{display:none}
+.opt .main{display:flex; flex-direction:column; gap:4px; min-width:0}
+.opt .name{display:flex; gap:8px; align-items:baseline; flex-wrap:wrap}
+.opt .nota{font-size:13.5px; color:var(--slate); line-height:1.5; max-width:78ch}
+.opt .meta{display:flex; flex-direction:column; gap:7px; align-items:flex-end; flex:none}
+.chips{display:flex; flex-wrap:wrap; gap:5px; justify-content:flex-end}
+.chip{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase; padding:3px 7px; border-radius:2px; background:var(--surface-2); color:var(--slate); border:1px solid var(--rule); white-space:nowrap}
+.chip.ya{background:var(--petrol-soft); color:var(--petrol); border-color:transparent}
+.chip.despues{background:var(--signal-bg); color:var(--signal); border-color:transparent}
+.chip.prueba{background:var(--surface-2); color:var(--slate)}
+.chip.no{background:var(--brick-bg); color:var(--brick); border-color:transparent}
+.chip.plan{background:var(--rule-hard); color:var(--paper); border-color:transparent}
+.chip.lado-oferta{border-color:var(--petrol); color:var(--petrol); background:transparent}
+.chip.lado-demanda{border-color:var(--signal); color:var(--signal); background:transparent}
+.chip.lado-ambos{border-color:var(--moss); color:var(--moss); background:transparent}
+.chip.lado-confianza{border-color:var(--faint); color:var(--slate); background:transparent}
+.estado{font-family:"IBM Plex Mono",monospace; font-size:11px; padding:5px 8px; border:1px solid var(--rule); border-radius:2px; background:var(--paper); color:var(--slate); cursor:pointer}
+.estado.probando{border-color:var(--signal); color:var(--signal); background:var(--signal-bg)}
+.estado.funciona{border-color:var(--moss); color:var(--moss); background:var(--moss-bg)}
+.estado.nofunciona{border-color:var(--brick); color:var(--brick); background:var(--brick-bg)}
+.opt.done{opacity:.55}
+.empty{padding:28px 16px; text-align:center; color:var(--faint); font-family:"IBM Plex Mono",monospace; font-size:12px}
+
+footer{border-top:2px solid var(--rule-hard); background:var(--surface); padding-block:24px 40px; margin-top:20px}
+.foot{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--slate)}
+.savenote{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint)}
+.savenote b{color:var(--moss); font-weight:600}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:640px){
+  .filters{position:static}
+  .opt{grid-template-columns:1fr}
+  .opt .meta{align-items:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:space-between; width:100%}
+  .chips{justify-content:flex-start}
+  .fcount{margin-left:0; width:100%}
+}
+</style>
+
+<div class="titleblock">
+  <div class="wrap tb-grid">
+    <div class="stack g16">
+      <span class="eyebrow">Nave · marketing orgánico · catálogo completo</span>
+      <h1>Todas las formas de conseguir dueños e inquilinos sin pagar por el clic</h1>
+      <p class="lede">Organizado por <em>mecanismo</em> — cómo llega el lead — y no por plataforma, porque “TikTok” e “Instagram” no son dos opciones: son el mismo video en dos lugares. Diez mecanismos cubren todo lo que existe; si un día aparece una opción nueva, entra en uno de estos diez. Cada opción dice para qué lado sirve, cuánto cuesta en tiempo, cuánto tarda en rendir, qué techo tiene, y cuándo te conviene. El plan de ocho semanas es un subconjunto de esto: lo que tiene la marca <b class="chip plan" style="font-size:9px">en el plan</b> ya lo estás haciendo.</p>
+    </div>
+    <div class="board">
+      <div class="stat hero"><span class="k">Opciones</span><span class="v" id="c-total">0</span></div>
+      <div class="stat"><span class="k">En el plan de 8 semanas</span><span class="v" id="c-plan">0</span></div>
+      <div class="stat"><span class="k">Hacé ya</span><span class="v" id="c-ya">0</span></div>
+      <div class="stat"><span class="k">Probando</span><span class="v" id="c-probando" style="color:var(--signal)">0</span></div>
+      <div class="stat"><span class="k">Funcionan</span><span class="v" id="c-funciona" style="color:var(--moss)">0</span></div>
+    </div>
+    <nav class="tax" id="tax" aria-label="Familias"></nav>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="wrap fwrap">
+    <div class="fgroup" data-key="lado"><span class="lbl">Lado</span><button class="fbtn" data-v="" aria-pressed="true">Todos</button><button class="fbtn" data-v="oferta" aria-pressed="false">Oferta</button><button class="fbtn" data-v="demanda" aria-pressed="false">Demanda</button><button class="fbtn" data-v="ambos" aria-pressed="false">Ambos</button><button class="fbtn" data-v="confianza" aria-pressed="false">Confianza</button></div>
+    <div class="fgroup" data-key="cuando"><span class="lbl">Cuándo</span><button class="fbtn" data-v="" aria-pressed="true">Todos</button><button class="fbtn" data-v="ya" aria-pressed="false">Ya</button><button class="fbtn" data-v="despues" aria-pressed="false">Después</button><button class="fbtn" data-v="prueba" aria-pressed="false">Probá una vez</button><button class="fbtn" data-v="no" aria-pressed="false">No para vos</button></div>
+    <div class="fgroup" data-key="esf"><span class="lbl">Esfuerzo</span><button class="fbtn" data-v="" aria-pressed="true">Todos</button><button class="fbtn" data-v="1" aria-pressed="false">1 hora</button><button class="fbtn" data-v="2" aria-pressed="false">Una tarde</button><button class="fbtn" data-v="3" aria-pressed="false">Semanas</button></div>
+    <label class="toggle"><input type="checkbox" id="f-nuevo"> Solo lo que no está en el plan</label>
+    <input class="search" id="f-q" type="search" placeholder="Buscar…" aria-label="Buscar opciones">
+    <span class="fcount" id="f-count"></span>
+  </div>
+</div>
+
+<main class="wrap" id="main"></main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="stack g8" style="max-width:56ch">
+      <span class="eyebrow">Cómo usar esto</span>
+      <p style="font-size:14.5px;color:var(--ink)">No es una lista para hacer entera. Es para tres cosas: elegir el próximo frente cuando uno se agota, no olvidarte de lo gratis que ya está listo (Google Business Profile, el contrato para descargar, el cartel en cada garaje), y anotar qué probaste y qué pasó — porque a los tres meses no te vas a acordar.</p>
+      <p class="small">Plan de ocho semanas: <a href="https://claude.ai/code/artifact/3d0ca6c9-28ea-4df9-b525-58676cb6ff4f">Plan de validación Nave</a></p>
+    </div>
+    <span class="savenote" id="savenote">Guardando localmente</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+var FAM = [
+ {id:"salida", n:"Salida directa", sub:"Vos vas a ellos", intro:"El mecanismo más rápido y el único que controlás del todo: elegís a quién, cuándo y con qué palabras. Todo lo que rinde en las primeras ocho semanas está acá."},
+ {id:"busqueda", n:"Que te encuentren", sub:"Búsqueda y descubrimiento", intro:"Alguien ya está buscando “baulera en alquiler Pilar” hoy. Estas opciones te ponen ahí sin pagar por el clic. Tardan más en rendir y después rinden solas."},
+ {id:"prestadas", n:"Audiencias prestadas", sub:"Comunidades que ya existen", intro:"Grupos, asambleas, cámaras: gente ya reunida alrededor de algo. Entrás con permiso, aportás algo, y recién después pedís."},
+ {id:"contenido", n:"Contenido propio", sub:"Lo que publicás vos", intro:"No trae las 50 publicaciones en ocho semanas. Trae credibilidad cuando te googlean, inbound de partners, y los creativos ya probados para la pauta. Techo de tiempo: 3,5 horas por semana."},
+ {id:"prensa", n:"Prensa y medios ganados", sub:"Alguien más lo cuenta", intro:"Una nota en un medio local vale más que cien posteos tuyos, y es gratis. El ángulo ya lo tenés: un vecino de Miraflores que sale a tocar puertas para alquilar garajes vacíos."},
+ {id:"producto", n:"El producto como canal", sub:"Referidos y viralidad", intro:"Cada espacio publicado, cada contrato firmado y cada pedido visible puede traer al siguiente. Es el mecanismo más barato por lead y el que más se olvida de diseñar."},
+ {id:"fisico", n:"Físico y presencial", sub:"Papel, carteles, charlas", intro:"En un country y en un pueblo, lo físico todavía funciona. Es barato, es local por definición, y nadie más lo hace."},
+ {id:"alianzas", n:"Alianzas y canje", sub:"Otro negocio te recomienda", intro:"Quien ya tiene la confianza del cliente te la presta. Mudanceras, inmobiliarias, self storage con overflow, la app del country."},
+ {id:"comunidad", n:"Comunidad propia", sub:"Tus dueños hablando entre ellos", intro:"Cuando tengas 20 hosts, ellos son tu canal. Un grupo, un café mensual, un embajador por country."},
+ {id:"retencion", n:"Reactivación y retención", sub:"Crecer desde lo que ya tenés", intro:"El 80 % de los sí llegan entre el tercer y el quinto contacto. Volver sobre lo tibio rinde más que cualquier lista nueva."}
+];
+
+/* lado: oferta | demanda | ambos | confianza · esf: 1 hora / 2 tarde / 3 semanas · t: dias|semanas|meses · techo: bajo|medio|alto · cuando: ya|despues|prueba|no */
+var OPTS = [
+ // salida
+ {id:"miraflores-puerta", f:"salida", n:"Puerta a puerta en Miraflores", lado:"ambos", esf:2, t:"dias", techo:"medio", cuando:"ya", plan:true, nota:"Tu ventaja injusta. 25 puertas por sábado de 10 a 13, grabando los espacios. Con aviso previo de la intendencia, la mitad ya sabe quién sos."},
+ {id:"vecinos-wapp", f:"salida", n:"WhatsApp uno a uno a vecinos del country", lado:"oferta", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:true, nota:"Después del posteo de la administración. Mensaje corto, un número de plata, una pregunta con día y hora."},
+ {id:"negocios-guardado", f:"salida", n:"Llamadas a bauleras, self storage y guardamuebles del corredor", lado:"oferta", esf:1, t:"dias", techo:"alto", cuando:"ya", plan:true, nota:"Un sí son diez unidades. DepoLock, Boxes Pilar, ONE Storage, Bauleras del Pilar, Guardado Norte ya tienen nombre y teléfono. Preguntá por vacancia, no por interés."},
+ {id:"ya-publican", f:"salida", n:"Mensajes a dueños que ya publican su cochera o baulera", lado:"oferta", esf:1, t:"dias", techo:"alto", cuando:"ya", plan:true, nota:"Zonaprop, Argenprop, Properati, MercadoLibre, Marketplace. Ya decidieron alquilar: les sumás un canal gratis. Uno por uno, a mano, por el chat de la plataforma."},
+ {id:"encargados", f:"salida", n:"Encargados de edificio, en la puerta", lado:"oferta", esf:2, t:"semanas", techo:"alto", cuando:"ya", plan:true, nota:"Saben qué cochera está vacía y de quién es. De 9 a 11 o de 16 a 18, con la comisión escrita en un papel."},
+ {id:"administradores", f:"salida", n:"Administradores de consorcio", lado:"oferta", esf:2, t:"meses", techo:"alto", cuando:"ya", plan:true, nota:"Un sí te abre diez edificios. La lista del Registro Público (Provincia y CABA) es gratis. One-pager y llamada de quince minutos."},
+ {id:"logisticas", f:"salida", n:"Depósitos y logísticas del Parque Industrial", lado:"oferta", esf:2, t:"semanas", techo:"medio", cuando:"prueba", plan:true, nota:"Rincón cercado o posiciones de pallet ociosas, por mes. Es otro producto: lo probás con 30 llamados y decidís."},
+ {id:"inmobiliarias", f:"salida", n:"Inmobiliarias de Pilar, Escobar y Garín", lado:"ambos", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:true, nota:"Dos cosas a la vez: cocheras que no logran alquilar (oferta) y vendedores que tienen que despejar la casa para mostrarla (demanda)."},
+ {id:"mudanzas", f:"salida", n:"Empresas de mudanzas, con comisión por referido", lado:"demanda", esf:1, t:"dias", techo:"alto", cuando:"ya", plan:true, nota:"Sus clientes necesitan guardar cosas hoy, no en abstracto. Diez de Pilar y Escobar. La mejor demanda del plan por hora invertida."},
+ {id:"reformas", f:"salida", n:"Arquitectos, estudios de reforma y construcción en seco", lado:"demanda", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:false, nota:"El cliente en obra guarda los muebles dos a cuatro meses y nadie le dice dónde. Un mensaje a diez estudios de la zona con “te doy un lugar para recomendar”."},
+ {id:"desarrolladores", f:"salida", n:"Desarrolladores con cocheras sin vender en edificios nuevos", lado:"oferta", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"En Pilar y Escobar centro hay edificios recién entregados con cocheras que no se vendieron. Para el desarrollador es renta sobre stock parado."},
+ {id:"organizadoras", f:"salida", n:"Organizadoras profesionales de espacios", lado:"demanda", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Hay muchas en Zona Norte y todas terminan diciéndole al cliente “esto lo guardás afuera”. Cinco mensajes por Instagram."},
+ {id:"corredores", f:"salida", n:"Productores de seguros de la zona", lado:"ambos", esf:1, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Tienen cartera de dueños de casas y son tu futuro partner para la póliza colectiva. Dos pájaros: se los presentás ahora, los usás en el mes 3."},
+ {id:"rrhh-parque", f:"salida", n:"Recursos Humanos de empresas del Parque Industrial", lado:"demanda", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Relocations y expatriados guardan muebles por meses y la empresa paga. Es demanda B2B con cheque corporativo; arrancá cuando tengas diez espacios grandes."},
+ {id:"nauticas", f:"salida", n:"Guarderías náuticas y clubes de remo de Escobar y Tigre", lado:"ambos", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Kayaks, tablas, motos de agua y lanchas chicas que no entran en la guardería van a un garaje grande de country. Nicho, pero es exactamente tu vecino."},
+ {id:"concesionarias", f:"salida", n:"Concesionarias y talleres mecánicos", lado:"demanda", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Clientes que se van seis meses y no saben dónde dejar el auto o la moto. Una cochera de Nave es la respuesta. Cinco llamados."},
+ {id:"universidades", f:"salida", n:"Universidad Austral, IAE y USAL Pilar: guardado de verano", lado:"demanda", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"En diciembre los estudiantes se van y guardan hasta marzo. Es estacional y cae justo al final de tus ocho semanas: prepará el afiche en noviembre."},
+ {id:"intendencias", f:"salida", n:"Intendencias de countries vecinos", lado:"oferta", esf:2, t:"semanas", techo:"alto", cuando:"despues", plan:true, nota:"Pilar tiene más de cien barrios cerrados. Nunca en frío: un vecino de Miraflores que conoce a alguien te presenta, y repetís el playbook entero."},
+ {id:"admin-countries", f:"salida", n:"Empresas que administran varios countries", lado:"oferta", esf:2, t:"meses", techo:"alto", cuando:"despues", plan:false, nota:"El equivalente del administrador de consorcio, pero para barrios cerrados. Un sí son veinte barrios. Cuando tengas el caso de Miraflores para mostrar."},
+
+ // busqueda
+ {id:"gbp", f:"busqueda", n:"Google Business Profile", lado:"ambos", esf:1, t:"semanas", techo:"alto", cuando:"ya", plan:true, nota:"Aparecés en Maps cuando alguien busca “baulera Pilar”. Gratis, una hora, y es el mejor anuncio que no vas a pagar. Antes que cualquier peso de pauta."},
+ {id:"gbp-posts", f:"busqueda", n:"Posts semanales, fotos y preguntas frecuentes en el perfil de Google", lado:"ambos", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:false, nota:"Un post por semana con un espacio nuevo. Google premia el perfil activo con más posiciones en el mapa."},
+ {id:"resenas", f:"busqueda", n:"Reseña en Google después de cada reserva", lado:"confianza", esf:1, t:"semanas", techo:"alto", cuando:"ya", plan:false, nota:"A las dos partes, el mismo día. Cinco reseñas reales en Pilar te ponen arriba de operadores con diez años de rubro."},
+ {id:"seo-contrato", f:"busqueda", n:"Modelo de contrato de alquiler de cochera y baulera, gratis para descargar", lado:"oferta", esf:2, t:"meses", techo:"alto", cuando:"ya", plan:false, nota:"La gente lo busca todos los días en Google y aterriza en vos. Una tarde de trabajo que rinde por años. De lo mejor que existe en SEO para este rubro en Argentina."},
+ {id:"calculadora", f:"busqueda", n:"Calculadora pública “¿cuánto vale tu garaje vacío?”", lado:"oferta", esf:2, t:"semanas", techo:"alto", cuando:"ya", plan:false, nota:"Metros, localidad, tipo de espacio, y un número por mes con el ancla real del corredor. El lead deja el WhatsApp para recibir el detalle. Sirve también como reel."},
+ {id:"seo-precios", f:"busqueda", n:"Índice público de precios de guardado en Zona Norte", lado:"ambos", esf:2, t:"meses", techo:"alto", cuando:"despues", plan:false, nota:"Actualizado cada mes con los precios reales que relevás. Lo linkean medios e inmobiliarias: es tu activo de autoridad."},
+ {id:"seo-local", f:"busqueda", n:"Una página por localidad", lado:"demanda", esf:2, t:"meses", techo:"alto", cuando:"despues", plan:false, nota:"“Baulera en alquiler Garín”, “cochera en Del Viso”, “guardamuebles Escobar”. Con los espacios reales de esa localidad. Cuando tengas cinco por localidad."},
+ {id:"blog", f:"busqueda", n:"Artículos que responden búsquedas reales", lado:"demanda", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Cuánto cuesta una baulera en Pilar, cómo guardar muebles sin que se arruinen, qué dice el reglamento sobre alquilar la cochera. Uno por mes, escrito por vos."},
+ {id:"geo-ai", f:"busqueda", n:"Presencia en respuestas de asistentes de IA", lado:"demanda", esf:1, t:"meses", techo:"medio", cuando:"prueba", plan:false, nota:"Cada vez más gente pregunta “dónde alquilo una baulera en Pilar” a ChatGPT o Perplexity. Una página clara y citable — qué es Nave, dónde opera, precios — es todo lo que hace falta."},
+ {id:"marketplace-fb", f:"busqueda", n:"Facebook Marketplace: cada espacio como publicación", lado:"demanda", esf:1, t:"dias", techo:"alto", cuando:"ya", plan:true, nota:"El canal de mayor intención de compra en Argentina y no cuesta nada. Cada espacio, con el link a Nave."},
+ {id:"portales", f:"busqueda", n:"Publicación gratuita en portales inmobiliarios", lado:"demanda", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:false, nota:"Zonaprop, Argenprop, MercadoLibre tienen publicación gratis para particulares con límite. Cada espacio de Nave también ahí, con el link. Es el espejo de escribirle a los que ya publican."},
+ {id:"wapp-canal", f:"busqueda", n:"Canal de WhatsApp “Nave Pilar”", lado:"ambos", esf:1, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"Espacios nuevos y pedidos de la semana. La gente sigue canales locales. Arrancalo cuando tengas contenido para todas las semanas."},
+ {id:"youtube-seo", f:"busqueda", n:"YouTube largo con título de búsqueda", lado:"demanda", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"“Cuánto cuesta guardar muebles en Pilar en 2026”. Un video de cinco minutos que se posiciona y trae gente durante dos años."},
+ {id:"directorios", f:"busqueda", n:"Directorios locales", lado:"ambos", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"DataPilar, guías de comercios de Pilar y Escobar, Páginas Amarillas, Cylex. Una hora, y suma links a tu sitio."},
+ {id:"apple-bing", f:"busqueda", n:"Apple Maps y Bing Places", lado:"demanda", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Veinte minutos, gratis, nadie lo hace. Los iPhone de Zona Norte buscan en Apple Maps más de lo que pensás."},
+ {id:"reddit", f:"busqueda", n:"Reddit: r/argentina, r/BuenosAires", lado:"demanda", esf:1, t:"dias", techo:"bajo", cuando:"prueba", plan:false, nota:"Un post honesto de founder — “estoy armando esto, qué le falta” — funciona. Publicidad te la comen viva."},
+
+ // prestadas
+ {id:"grupo-miraflores", f:"prestadas", n:"Grupo de WhatsApp o app del country, con posteo de la administración", lado:"ambos", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:true, nota:"Un posteo de la administración vale cien tuyos. Se pide en la primera reunión con la intendencia."},
+ {id:"asamblea", f:"prestadas", n:"Cinco minutos en la asamblea de propietarios", lado:"oferta", esf:1, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Están todos, están sentados, y el tema es el barrio. Pedí el espacio con un mes de anticipación."},
+ {id:"revista-country", f:"prestadas", n:"Revista o newsletter del country", lado:"ambos", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Muchos countries tienen una. Una nota corta de “vecino emprendedor” y llega a las 450 casas sin tocar ninguna."},
+ {id:"fb-vecinales", f:"prestadas", n:"Grupos de Facebook vecinales", lado:"ambos", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:true, nota:"Garín, Del Viso, Pilar, Escobar, Maschwitz. Diez grupos, un posteo por semana en cada uno, rotando el formato. Con un espacio real, no con un logo."},
+ {id:"fb-mudanza", f:"prestadas", n:"Grupos de “me mudo y vendo todo”", lado:"demanda", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:false, nota:"El que vende todo se está mudando ya. Comentá con respeto, ofrecé el lugar para lo que no vendió. Es demanda con fecha."},
+ {id:"fb-mamis", f:"prestadas", n:"Grupos de madres de Pilar y Escobar", lado:"demanda", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:false, nota:"Cochecitos, cunas, ropa por talle, la bici que quedó chica. El guardado de cosas de bebé es una necesidad enorme y nadie la atiende. Enorme en Argentina."},
+ {id:"expats", f:"prestadas", n:"Grupos de expatriados en Zona Norte", lado:"demanda", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Relocations con muebles por meses y presupuesto de empresa. Poca gente, mucho ticket."},
+ {id:"linkedin-grupos", f:"prestadas", n:"Grupos de LinkedIn de administradores y propiedad horizontal", lado:"oferta", esf:1, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"Ahí están los administradores leyendo sobre su rubro. Un post útil por mes sobre cocheras vacías, sin vender."},
+ {id:"camaras", f:"prestadas", n:"Cámaras del sector: CAPHAI, AIERH", lado:"oferta", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Una charla en un evento o una nota en el newsletter te pone frente a cientos de administradores de una. Cuando tengas el caso armado."},
+ {id:"clubes", f:"prestadas", n:"Clubes de rugby y hockey de Pilar", lado:"ambos", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Cartelera y grupo de padres, por canje y no por pauta. Los padres de club son exactamente los dueños de garaje grande."},
+ {id:"eventos-emprendedores", f:"prestadas", n:"Comunidades de emprendedores", lado:"confianza", esf:2, t:"meses", techo:"bajo", cuando:"despues", plan:false, nota:"Endeavor, meetups, IAE. Traen partners, inversores y consejo. Leads, casi ninguno. Una vez por mes, no más."},
+ {id:"telegram", f:"prestadas", n:"Grupos de Telegram locales", lado:"demanda", esf:1, t:"dias", techo:"bajo", cuando:"no", plan:false, nota:"Casi no hay actividad local en Argentina. El tiempo va a Facebook y WhatsApp."},
+
+ // contenido
+ {id:"ig-reels", f:"contenido", n:"Instagram Reels, tres por semana", lado:"ambos", esf:2, t:"semanas", techo:"alto", cuando:"ya", plan:true, nota:"El principal. Ahí están los dueños y los inquilinos. Grabados el sábado en Miraflores, editados el viernes."},
+ {id:"ig-stories", f:"contenido", n:"Stories diarias: el trabajo en vivo", lado:"ambos", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:true, nota:"Cero producción. La puerta, la cinta métrica, el garaje. Es lo que hace que te crean cuando les escribís."},
+ {id:"tiktok", f:"contenido", n:"TikTok con los mismos reels", lado:"ambos", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:true, nota:"Cinco minutos por video. Nada nativo todavía."},
+ {id:"yt-shorts", f:"contenido", n:"YouTube Shorts con los mismos reels", lado:"ambos", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Tercer repost del mismo archivo. Casi gratis; rinde poco en Argentina pero suma en búsqueda."},
+ {id:"linkedin-posts", f:"contenido", n:"LinkedIn, dos posts por semana", lado:"oferta", esf:1, t:"semanas", techo:"alto", cuando:"ya", plan:true, nota:"El subestimado. Administradores, inmobiliarias y operadores de self storage están ahí. Este canal sí te trae oferta directa."},
+ {id:"build-public", f:"contenido", n:"Números semanales en público", lado:"confianza", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:true, nota:"“Semana 3: 14 publicaciones, 160 mensajes, 3 no rotundos.” Construye audiencia de founders, partners y prensa."},
+ {id:"video-tour", f:"contenido", n:"Tour de 60 segundos por cada espacio publicado", lado:"demanda", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:false, nota:"Se graba en la visita. Va en la publicación, en Marketplace y en el reel. Un video vale cuatro fotos."},
+ {id:"antes-despues", f:"contenido", n:"Antes y después de un garaje preparado para alquilar", lado:"ambos", esf:1, t:"semanas", techo:"medio", cuando:"prueba", plan:false, nota:"El formato más compartido de organización. Lo hacés con el primer vecino que ordena el garaje para publicarlo."},
+ {id:"email-newsletter", f:"contenido", n:"Newsletter propia a la lista de espera", lado:"demanda", esf:1, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"“Espacios nuevos de la semana en Pilar.” Cuando la lista tenga veinte personas. Antes es un mail a nadie."},
+ {id:"linkedin-newsletter", f:"contenido", n:"Newsletter de LinkedIn mensual", lado:"confianza", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"“El estado del guardado en Zona Norte.” Con tu índice de precios. Te vuelve la referencia del tema."},
+ {id:"guia-consorcio", f:"contenido", n:"Guía descargable: cómo alquilar tu cochera sin problemas con el consorcio", lado:"oferta", esf:2, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"Resuelve el miedo número uno del dueño. Se descarga dejando el WhatsApp. Se escribe con lo que aprendiste en las primeras cuatro semanas."},
+ {id:"podcast-invitado", f:"contenido", n:"Invitado en podcasts de emprendedores y proptech", lado:"confianza", esf:1, t:"meses", techo:"bajo", cuando:"despues", plan:false, nota:"Pedilo cuando tengas números. Una hora de tu tiempo, contenido para reutilizar en diez clips."},
+ {id:"twitter", f:"contenido", n:"X / Twitter build in public", lado:"confianza", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Founders y prensa te leen; leads, casi cero. Pegá el mismo post de LinkedIn y listo."},
+ {id:"pinterest", f:"contenido", n:"Pinterest", lado:"demanda", esf:2, t:"meses", techo:"bajo", cuando:"no", plan:false, nota:"Sin tracción local para esto. El tiempo va a Instagram."},
+
+ // prensa
+ {id:"medios-locales", f:"prensa", n:"Medios de Pilar y Escobar", lado:"ambos", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:false, nota:"Pilar de Todos, El Diario de Pilar, DataPilar, El Día de Escobar. Un mail con el ángulo “vecino de Miraflores sale a tocar puertas para alquilar garajes vacíos” y tres fotos. Publican."},
+ {id:"radios", f:"prensa", n:"Radios FM de Pilar y Escobar", lado:"ambos", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Diez minutos al aire en un programa de la mañana. Se consigue con un WhatsApp al productor."},
+ {id:"proptech", f:"prensa", n:"Medios de real estate", lado:"oferta", esf:1, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Reporte Inmobiliario, Real Estate Data. Los leen inmobiliarias y administradores. Llevales el índice de precios."},
+ {id:"medios-nacionales", f:"prensa", n:"Medios nacionales de emprendedores y economía", lado:"confianza", esf:2, t:"meses", techo:"alto", cuando:"despues", plan:false, nota:"Infobae, La Nación Propiedades, Clarín ARQ, iProUP, Forbes. Ángulo “el Airbnb de las bauleras”. Cuando tengas 30 espacios y 5 reservas; antes es humo y lo notan."},
+ {id:"concursos", f:"prensa", n:"Concursos y programas de emprendedores", lado:"confianza", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"NAVES del IAE queda en Pilar y — sí — se llama NAVES. Usá la coincidencia. Premios provinciales de emprendedores también. Credibilidad y prensa gratis."},
+ {id:"hn-ph", f:"prensa", n:"Product Hunt, Hacker News", lado:"confianza", esf:2, t:"dias", techo:"bajo", cuando:"no", plan:false, nota:"Audiencia equivocada para un marketplace local argentino. Ni un minuto."},
+
+ // producto
+ {id:"ref-hosts", f:"producto", n:"Referidos host a host, pedidos con nombre y apellido", lado:"oferta", esf:1, t:"semanas", techo:"alto", cuando:"ya", plan:true, nota:"“¿A quién más del barrio le sobra un garaje?” No “si conocés a alguien”. Tres nombres por host publicado."},
+ {id:"cartel-garaje", f:"producto", n:"Cartel “este espacio se alquila por Nave” en cada garaje o baulera", lado:"ambos", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:false, nota:"Con permiso del dueño. Cada espacio publicado es un cartel en un lugar por donde pasan vecinos todos los días."},
+ {id:"compartir", f:"producto", n:"Botón de compartir cada publicación a WhatsApp con texto pre-armado", lado:"demanda", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:false, nota:"“Mirá, un garaje a tres cuadras de casa, 8 m², [$X] por mes.” El texto lo escribís vos; la gente solo toca."},
+ {id:"pedidos-compartibles", f:"producto", n:"Pedidos visibles que se comparten como imagen", lado:"ambos", esf:1, t:"dias", techo:"medio", cuando:"ya", plan:false, nota:"“Se busca 6 m² en Del Viso para muebles, 3 meses.” Es demanda real hecha tarjeta, y va a los grupos de Facebook y al del country."},
+ {id:"contrato-marca", f:"producto", n:"El contrato lleva la marca Nave", lado:"confianza", esf:1, t:"meses", techo:"bajo", cuando:"ya", plan:false, nota:"El dueño se lo muestra al vecino que le pregunta “¿y cómo hiciste?”. Gratis y permanente."},
+ {id:"ref-inquilinos", f:"producto", n:"Referidos inquilino a inquilino", lado:"demanda", esf:1, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Un descuento en el próximo mes por cada amigo que reserva. Cuando tengas cinco inquilinos."},
+ {id:"qr-baulera", f:"producto", n:"Sticker con QR en la puerta de la baulera del edificio", lado:"oferta", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Los vecinos del mismo edificio pasan por ahí. “¿Tenés una baulera vacía? Escaneá.” Con permiso del encargado."},
+ {id:"badge", f:"producto", n:"Sello “vecino verificado por Nave”", lado:"confianza", esf:1, t:"meses", techo:"bajo", cuando:"despues", plan:false, nota:"Algo que el dueño quiera mostrar en su perfil o en la puerta. Identidad para el que ya está adentro."},
+ {id:"alertas", f:"producto", n:"Alertas por WhatsApp de espacios nuevos en tu zona", lado:"demanda", esf:2, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"El inquilino se suscribe a “Garín, hasta 10 m²” y le avisás cuando aparece. Retención y boca a boca a la vez."},
+
+ // fisico
+ {id:"flyers-country", f:"fisico", n:"Flyers en SUM, garita y club house de Miraflores", lado:"ambos", esf:1, t:"dias", techo:"bajo", cuando:"ya", plan:true, nota:"Con permiso de la administración. Un QR a la calculadora, no al home."},
+ {id:"charla-clubhouse", f:"fisico", n:"Charla de 30 minutos en el club house", lado:"oferta", esf:2, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"“Cómo ganar plata con tu garaje vacío.” Quince vecinos sentados valen más que cien mensajes. Con café, un martes a las 19."},
+ {id:"flyers-edificios", f:"fisico", n:"Flyer en el hall o ascensor de edificios", lado:"oferta", esf:1, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"Con permiso del encargado, que además cobra si sale. En Pilar centro y Escobar centro."},
+ {id:"carteleras", f:"fisico", n:"Carteleras de comercios de Garín y Del Viso", lado:"demanda", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Kioscos, panaderías, veterinarias, lavaderos. Veinte carteles una tarde. Rinde poco, pero es local por definición."},
+ {id:"feria-country", f:"fisico", n:"Stand en la feria o evento del country", lado:"ambos", esf:2, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Día del niño, feria de emprendedores, torneo de golf. Están todos, están relajados, y tenés la cinta métrica en la mano."},
+ {id:"ferias-pilar", f:"fisico", n:"Ferias de emprendedores de Pilar y Escobar", lado:"ambos", esf:2, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Una vez, para ver si el público es el tuyo. Probablemente no lo sea, pero lo sabés en un sábado."},
+ {id:"auto-calco", f:"fisico", n:"Vinilo en tu auto", lado:"ambos", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"En un country tu auto pasa por las 450 casas. Es cursi y funciona. “Nave · alquilá tu garaje vacío” y el WhatsApp."},
+ {id:"parabrisas", f:"fisico", n:"Volantes en parabrisas en los shoppings de Pilar", lado:"demanda", esf:1, t:"dias", techo:"bajo", cuando:"no", plan:false, nota:"Molesta, se tira, y te asocian con eso. No."},
+ {id:"carteles-calle", f:"fisico", n:"Carteles en la vía pública", lado:"ambos", esf:1, t:"semanas", techo:"bajo", cuando:"no", plan:false, nota:"Ilegal en la mayoría de los municipios y da imagen de trucho. No."},
+
+ // alianzas
+ {id:"self-storage-overflow", f:"alianzas", n:"Self storage como partner de overflow", lado:"demanda", esf:1, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"Lo que ellos no pueden tomar — por tamaño, precio o zona — te lo mandan con comisión. Es la segunda conversación con los mismos seis operadores."},
+ {id:"app-country", f:"alianzas", n:"La app que usa el country para accesos y avisos", lado:"ambos", esf:1, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Que te incluyan en “servicios del barrio”. Se pide a la administración; la app suele decir que sí porque le suma contenido."},
+ {id:"inmo-widget", f:"alianzas", n:"Widget para inmobiliarias", lado:"demanda", esf:3, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"“¿El comprador necesita guardar cosas durante la mudanza?” en la ficha de la propiedad. Producto, no marketing: mes 4 o después."},
+ {id:"limpieza", f:"alianzas", n:"Empresas de limpieza y fletes chicos", lado:"demanda", esf:1, t:"semanas", techo:"bajo", cuando:"prueba", plan:false, nota:"Entran a las casas cuando hay mudanza o reforma. Una tarjeta y una comisión."},
+ {id:"cross-startups", f:"alianzas", n:"Cross-promo con otros servicios entre vecinos", lado:"ambos", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Paseadores, jardinería, limpieza, niñeras del barrio. Se recomiendan entre sí en el grupo del country."},
+ {id:"colegios", f:"alianzas", n:"Colegios del country y de la zona", lado:"demanda", esf:1, t:"meses", techo:"bajo", cuando:"prueba", plan:false, nota:"Cada marzo entran familias nuevas que se están mudando. Un mensaje a la secretaría en febrero."},
+
+ // comunidad
+ {id:"grupo-duenos", f:"comunidad", n:"Grupo de WhatsApp “Dueños Nave”", lado:"oferta", esf:1, t:"semanas", techo:"medio", cuando:"despues", plan:false, nota:"Los hosts se cuentan entre ellos cuánto cobran y cómo les fue. Vos escuchás y aprendés. Con veinte hosts."},
+ {id:"embajadores", f:"comunidad", n:"Un vecino embajador por country, con comisión", lado:"oferta", esf:2, t:"meses", techo:"alto", cuando:"despues", plan:false, nota:"El que ya publicó y le fue bien se convierte en tu persona en ese barrio. Es cómo salís de Miraflores sin duplicarte."},
+ {id:"cafe-duenos", f:"comunidad", n:"Café de dueños una vez al mes", lado:"oferta", esf:1, t:"meses", techo:"bajo", cuando:"despues", plan:false, nota:"Ocho personas en el club house. Traen al vecino. Es marketing disfrazado de comunidad, y no está mal."},
+
+ // retencion
+ {id:"seguimiento", f:"retencion", n:"Secuencia de tres toques", lado:"ambos", esf:1, t:"dias", techo:"alto", cuando:"ya", plan:true, nota:"Día 3, día 7, día 14. Ahí está el 80 % de los sí. El que no la hace tiene un embudo a la mitad."},
+ {id:"pedir-referido", f:"retencion", n:"“¿A quién más?” en cada interacción positiva", lado:"ambos", esf:1, t:"dias", techo:"alto", cuando:"ya", plan:true, nota:"No al final del proceso: en el momento en que la persona dice que sí. Es cuando más ganas tiene de ayudarte."},
+ {id:"retencion-llamada", f:"retencion", n:"Llamada a cada host publicado contándole qué pasa", lado:"oferta", esf:1, t:"semanas", techo:"medio", cuando:"ya", plan:true, nota:"Semana 7. El host que no cobró nada se va en silencio si no lo llamás. Si lo llamás, se queda y te trae a otro."},
+ {id:"recontacto-no", f:"retencion", n:"Recontacto a todos los “no” cada 60 días", lado:"oferta", esf:1, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"“Ya tenemos 30 espacios en Pilar y 12 inquilinos. ¿Lo pensamos de nuevo?” El “no” de hoy es el “sí” de cuando hay prueba social."},
+ {id:"newsletter-hosts", f:"retencion", n:"Mensual a hosts: cuánto ganaron los vecinos este mes", lado:"oferta", esf:1, t:"meses", techo:"medio", cuando:"despues", plan:false, nota:"Agregado y real. El host que ve que otros cobran no se va, y lo reenvía."}
+];
+
+var ESF = {1:"1 hora", 2:"una tarde", 3:"semanas"};
+var T = {dias:"días", semanas:"semanas", meses:"meses"};
+var CUANDO = {ya:"Hacé ya", despues:"Después", prueba:"Probá una vez", no:"No para vos"};
+var LADO = {oferta:"Oferta", demanda:"Demanda", ambos:"Oferta y demanda", confianza:"Confianza"};
+var ESTADOS = [["", "— estado"],["probando","Probando"],["funciona","Funciona"],["nofunciona","No funciona"]];
+
+var state = {estados:{}};
+var filter = {lado:"", cuando:"", esf:"", nuevo:false, q:""};
+var docRef = null, saveTimer = null;
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function el(tag, cls, html){var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e;}
+function norm(s){return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");}
+
+/* ---------- render ---------- */
+function renderTax(){
+  var host = document.getElementById("tax");
+  FAM.forEach(function(f){
+    var count = OPTS.filter(function(o){return o.f===f.id;}).length;
+    var a = el("a"); a.href = "#fam-"+f.id;
+    a.appendChild(el("b",null,esc(f.n)));
+    a.appendChild(el("span",null,count+" · "+esc(f.sub)));
+    host.appendChild(a);
+  });
+}
+function renderAll(){
+  var main = document.getElementById("main");
+  main.textContent = "";
+  FAM.forEach(function(f){
+    var sec = el("section","fam"); sec.id = "fam-"+f.id;
+    var head = el("div","fhead");
+    head.appendChild(el("span","eyebrow",esc(f.sub)));
+    head.appendChild(el("h2",null,esc(f.n)));
+    head.appendChild(el("p","lede",esc(f.intro)));
+    head.appendChild(el("span","n",""));
+    sec.appendChild(head);
+    var list = el("div","opts");
+    OPTS.filter(function(o){return o.f===f.id;}).forEach(function(o){ list.appendChild(renderOpt(o)); });
+    list.appendChild(el("div","empty","Nada con estos filtros en esta familia."));
+    sec.appendChild(list);
+    main.appendChild(sec);
+  });
+}
+function renderOpt(o){
+  var row = el("div","opt"); row.id = "opt-"+o.id; row.dataset.id = o.id;
+  var main = el("div","main");
+  var name = el("div","name");
+  name.appendChild(el("h3",null,esc(o.n)));
+  if(o.plan) name.appendChild(el("span","chip plan","en el plan"));
+  main.appendChild(name);
+  main.appendChild(el("p","nota",esc(o.nota)));
+  row.appendChild(main);
+
+  var meta = el("div","meta");
+  var chips = el("div","chips");
+  chips.appendChild(el("span","chip "+o.cuando, esc(CUANDO[o.cuando])));
+  chips.appendChild(el("span","chip lado-"+o.lado, esc(LADO[o.lado])));
+  chips.appendChild(el("span","chip", esc(ESF[o.esf])));
+  chips.appendChild(el("span","chip", "rinde en "+esc(T[o.t])));
+  chips.appendChild(el("span","chip", "techo "+esc(o.techo)));
+  meta.appendChild(chips);
+
+  var sel = el("select","estado"); sel.id = "estado-"+o.id; sel.setAttribute("aria-label","Estado de "+o.n);
+  ESTADOS.forEach(function(p){ var op = el("option",null,esc(p[1])); op.value = p[0]; sel.appendChild(op); });
+  sel.value = state.estados[o.id] || "";
+  sel.className = "estado " + (sel.value || "");
+  sel.addEventListener("change", function(){
+    if(sel.value) state.estados[o.id] = sel.value; else delete state.estados[o.id];
+    sel.className = "estado " + (sel.value || "");
+    row.classList.toggle("done", sel.value === "nofunciona");
+    counts(); queueSave();
+  });
+  row.classList.toggle("done", sel.value === "nofunciona");
+  meta.appendChild(sel);
+  row.appendChild(meta);
+  return row;
+}
+
+/* ---------- filters ---------- */
+function applyFilter(){
+  var q = norm(filter.q.trim());
+  var shown = 0;
+  FAM.forEach(function(f){
+    var sec = document.getElementById("fam-"+f.id);
+    var n = 0;
+    OPTS.filter(function(o){return o.f===f.id;}).forEach(function(o){
+      var ok = (!filter.lado || o.lado===filter.lado)
+            && (!filter.cuando || o.cuando===filter.cuando)
+            && (!filter.esf || String(o.esf)===filter.esf)
+            && (!filter.nuevo || !o.plan)
+            && (!q || norm(o.n+" "+o.nota).indexOf(q) >= 0);
+      document.getElementById("opt-"+o.id).hidden = !ok;
+      if(ok) n++;
+    });
+    sec.querySelector(".empty").hidden = n > 0;
+    sec.querySelector(".fhead .n").textContent = n + " de " + OPTS.filter(function(o){return o.f===f.id;}).length;
+    shown += n;
+  });
+  document.getElementById("f-count").textContent = shown + " de " + OPTS.length + " opciones";
+}
+function wireFilters(){
+  document.querySelectorAll(".fgroup").forEach(function(g){
+    var key = g.dataset.key;
+    g.querySelectorAll(".fbtn").forEach(function(b){
+      b.addEventListener("click", function(){
+        filter[key] = b.dataset.v;
+        g.querySelectorAll(".fbtn").forEach(function(x){ x.setAttribute("aria-pressed", x===b ? "true" : "false"); });
+        applyFilter();
+      });
+    });
+  });
+  document.getElementById("f-nuevo").addEventListener("change", function(e){ filter.nuevo = e.target.checked; applyFilter(); });
+  document.getElementById("f-q").addEventListener("input", function(e){ filter.q = e.target.value; applyFilter(); });
+}
+
+/* ---------- counts ---------- */
+function counts(){
+  var probando = 0, funciona = 0;
+  Object.keys(state.estados).forEach(function(k){ if(state.estados[k]==="probando") probando++; if(state.estados[k]==="funciona") funciona++; });
+  document.getElementById("c-total").textContent = OPTS.length;
+  document.getElementById("c-plan").textContent = OPTS.filter(function(o){return o.plan;}).length;
+  document.getElementById("c-ya").textContent = OPTS.filter(function(o){return o.cuando==="ya";}).length;
+  document.getElementById("c-probando").textContent = probando;
+  document.getElementById("c-funciona").textContent = funciona;
+}
+
+/* ---------- persistence ---------- */
+var LS = "nave-catalogo-v1";
+function loadLocal(){ try { var p = JSON.parse(localStorage.getItem(LS)||"null"); if(p && p.estados) state.estados = p.estados; } catch(e){} }
+function saveLocal(){ try { localStorage.setItem(LS, JSON.stringify(state)); } catch(e){} }
+function queueSave(){
+  saveLocal();
+  if(!docRef) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    docRef.set({estados: state.estados, updated: new Date().toISOString()})
+      .then(function(){ setNote("Guardado en la nube", true); })
+      .catch(function(){ setNote("Guardando localmente", false); });
+  }, 600);
+}
+function setNote(text, cloud){ document.getElementById("savenote").innerHTML = cloud ? "<b>&#9679;</b> " + text : text; }
+function applyState(){
+  OPTS.forEach(function(o){
+    var sel = document.getElementById("estado-"+o.id);
+    if(!sel) return;
+    sel.value = state.estados[o.id] || "";
+    sel.className = "estado " + (sel.value || "");
+    document.getElementById("opt-"+o.id).classList.toggle("done", sel.value === "nofunciona");
+  });
+  counts();
+}
+
+/* ---------- boot ---------- */
+loadLocal();
+renderTax();
+renderAll();
+wireFilters();
+applyFilter();
+counts();
+
+if(window.claude && typeof window.claude.use === "function"){
+  window.claude.use("db").then(function(db){
+    if(!db) return;
+    docRef = db.doc("catalogo/estado");
+    docRef.onSnapshot(function(snap){
+      if(!snap.exists){ setNote("Guardado en la nube", true); return; }
+      if(snap.metadata && snap.metadata.hasPendingWrites) return;
+      var d = snap.data() || {};
+      state.estados = d.estados || {};
+      saveLocal(); applyState();
+      setNote("Guardado en la nube", true);
+    }, function(){ docRef = null; setNote("Guardando localmente", false); });
+  }).catch(function(){});
+}
+})();
+</script>

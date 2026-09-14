@@ -3,7 +3,8 @@
 Plan de marketing orgánico + pauta para llevar Nave de 0 a **50 espacios publicados en 8 semanas**,
 arrancando casa por casa en Miraflores Country Club (Garín, km 37,5 de Panamericana Ramal Pilar).
 
-**Tablero interactivo:** https://claude.ai/code/artifact/3d0ca6c9-28ea-4df9-b525-58676cb6ff4f
+**Tablero interactivo (plan de 8 semanas):** https://claude.ai/code/artifact/3d0ca6c9-28ea-4df9-b525-58676cb6ff4f
+**Catálogo orgánico (las 99 opciones):** https://claude.ai/artifact/Pu1fHmvbPe3FW9RLgM7Dry
 
 El tablero guarda el progreso: marcás las tareas de cada semana y cargás tres números por semana
 (contactos, publicaciones confirmadas, reservas reales). Con eso calcula la tasa real de conversión
@@ -36,7 +37,18 @@ y el ritmo contra el plan.
 | Guiones | 8 guiones de WhatsApp/puerta + 3 guiones de video |
 | Ritmo · Contenido · Riesgos | Semana tipo, techo de contenido, 9 riesgos |
 
+## Catálogo orgánico
+
+Las 99 formas de conseguir dueños e inquilinos sin pagar por el clic, organizadas por mecanismo
+(cómo llega el lead): salida directa, búsqueda y descubrimiento, audiencias prestadas, contenido
+propio, prensa, el producto como canal, físico, alianzas, comunidad propia, reactivación.
+Cada opción tiene lado (oferta / demanda / ambos / confianza), esfuerzo, tiempo a resultado,
+techo, momento (hacé ya / después / probá una vez / no para vos) y un estado que se guarda
+(probando / funciona / no funciona). 24 de las 99 ya están en el plan de 8 semanas.
+
 ## Archivos
 
-- `plan-validacion.html` — fuente del tablero. Para actualizarlo, editar este archivo y republicar
-  sobre la misma URL.
+- `plan-validacion.html` — fuente del tablero del plan.
+- `catalogo-organico.html` — fuente del catálogo.
+
+Para actualizar cualquiera de los dos, editar el archivo y republicar sobre la misma URL.
